@@ -108,24 +108,27 @@
   </nav>
 
   <section class="tarjeta">
-    <h2>&iquest;Te avisamos de las pr&oacute;ximas fechas?</h2>
-    <p class="sub">Dejanos tu contacto y te escribimos con las salidas programadas y experiencias nuevas.</p>
+    <h2>Trabajemos juntos</h2>
+    <p class="sub">Si conversamos en una reuni&oacute;n o quiere explorar una colaboraci&oacute;n, d&eacute;jenos sus datos y le escribimos.</p>
     <form id="f" novalidate>
       <label for="nombre">Nombre</label>
-      <input id="nombre" name="nombre" maxlength="120" required autocomplete="name" placeholder="Tu nombre">
-      <label for="contacto">WhatsApp o correo</label>
-      <input id="contacto" name="contacto" maxlength="160" required autocomplete="email" placeholder="+503 XXXX XXXX o correo">
-      <label for="interes">Me interesa</label>
+      <input id="nombre" name="nombre" maxlength="120" required autocomplete="name" placeholder="Nombre y apellido">
+      <label for="correo">Correo</label>
+      <input id="correo" name="correo" type="email" maxlength="160" required autocomplete="email" placeholder="nombre@empresa.com">
+      <label for="empresa">Empresa u organizaci&oacute;n</label>
+      <input id="empresa" name="empresa" maxlength="120" autocomplete="organization" placeholder="&iquest;D&oacute;nde trabaja?">
+      <label for="interes">Tema</label>
       <select id="interes" name="interes">
-        <option>Vuelo esc&eacute;nico</option>
-        <option>Traslado ejecutivo</option>
-        <option>Evento o celebraci&oacute;n</option>
+        <option>Alianza comercial</option>
+        <option>Traslados ejecutivos</option>
+        <option>Eventos y grupos</option>
+        <option>Vuelos esc&eacute;nicos</option>
         <option>Otro</option>
       </select>
       <label for="mensaje">Mensaje (opcional)</label>
-      <textarea id="mensaje" name="mensaje" maxlength="600"></textarea>
-      <input class="hp" type="text" name="empresa" tabindex="-1" autocomplete="off">
-      <button class="enviar" type="submit">Quiero que me escriban</button>
+      <textarea id="mensaje" name="mensaje" maxlength="600" placeholder="Cu&eacute;ntenos brevemente qu&eacute; tiene en mente"></textarea>
+      <input class="hp" type="text" name="sitio" tabindex="-1" autocomplete="off">
+      <button class="enviar" type="submit">Enviar</button>
       <p class="estado" id="estado"></p>
     </form>
   </section>
@@ -147,11 +150,11 @@
   var estado = document.getElementById("estado");
   f.addEventListener("submit", function (e) {
     e.preventDefault();
-    if (f.empresa.value) return;
-    var nombre = f.nombre.value.trim(), contacto = f.contacto.value.trim();
+    if (f.sitio.value) return;
+    var nombre = f.nombre.value.trim(), contacto = f.correo.value.trim();
     estado.className = "estado";
-    if (!nombre || contacto.length < 3) {
-      estado.textContent = "Contanos tu nombre y un WhatsApp o correo para escribirte.";
+    if (!nombre || contacto.indexOf("@") < 1) {
+      estado.textContent = "Ind\u00edquenos su nombre y un correo v\u00e1lido para escribirle.";
       estado.className = "estado error";
       return;
     }
@@ -167,16 +170,17 @@
       },
       body: JSON.stringify({
         nombre: nombre, contacto: contacto,
+        empresa: f.empresa.value.trim() || null,
         interes: f.interes.value, mensaje: f.mensaje.value.trim() || null,
         fuente: "links"
       })
     }).then(function (r) {
       if (!r.ok) throw new Error(r.status);
       f.reset();
-      estado.textContent = "Gracias, ya quedamos con tu contacto. Te escribimos pronto.";
+      estado.textContent = "Gracias. Recibimos sus datos y le escribimos pronto.";
       estado.className = "estado ok";
     }).catch(function () {
-      estado.innerHTML = 'No pudimos guardar tu contacto. Escribinos directo por <a href="https://wa.me/50377458200">WhatsApp</a>.';
+      estado.innerHTML = 'No pudimos guardar sus datos. Escr&iacute;banos a <a href="mailto:info@cielonorteaviacion.com">info@cielonorteaviacion.com</a>.';
       estado.className = "estado error";
     }).finally(function () { btn.disabled = false; });
   });
