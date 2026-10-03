@@ -52,6 +52,42 @@
   }
 
   /* ── HEADER ── */
+  /* ── barra de anuncio: corre sin fin, se detiene al pasar el cursor ── */
+  .anuncio {
+    position: relative; z-index: 10;
+    overflow: hidden;
+    background: rgba(56,189,248,0.10);
+    border-bottom: 1px solid rgba(56,189,248,0.22);
+  }
+  .anuncio-pista {
+    display: flex; width: max-content;
+    animation: anuncioCorre 44s linear infinite;
+    will-change: transform;
+  }
+  .anuncio:hover .anuncio-pista { animation-play-state: paused; }
+  .anuncio-grupo { display: flex; flex-shrink: 0; }
+  .anuncio-grupo span {
+    display: block; padding: 9px 0;
+    font-size: 10.5px; font-weight: 500;
+    letter-spacing: 2.2px; text-transform: uppercase;
+    color: #bae6fd; white-space: nowrap;
+  }
+  .anuncio-grupo span::after {
+    content: '\00b7'; margin: 0 24px;
+    color: rgba(186,230,253,0.42);
+  }
+  @keyframes anuncioCorre {
+    from { transform: translate3d(0, 0, 0); }
+    to   { transform: translate3d(-50%, 0, 0); }
+  }
+  /* quien pide menos movimiento ve una sola frase quieta y centrada */
+  @media (prefers-reduced-motion: reduce) {
+    .anuncio-pista { animation: none; width: 100%; justify-content: center; }
+    .anuncio-grupo:nth-child(2) { display: none; }
+    .anuncio-grupo span:nth-child(n+2) { display: none; }
+    .anuncio-grupo span::after { content: ''; margin: 0; }
+  }
+
   header {
     position: relative; z-index: 10;
     padding: 24px 48px 16px;
@@ -960,8 +996,10 @@
   /* telefono y autocompletado: la lista de paises en el mismo vidrio que el resto.
      Ojo: el que hace scroll es .iti__dropdown-content, asi que la superficie
      (fondo, borde, esquinas y sombra) va ahi y la lista queda transparente. */
+  .iti--container { z-index: 9999 !important; }
+  .pac-container { z-index: 9999 !important; }
   .iti__dropdown-content, .pac-container {
-    background: rgba(12,22,38,0.82) !important;
+    background: rgba(10,18,32,0.94) !important;
     -webkit-backdrop-filter: blur(16px);
             backdrop-filter: blur(16px);
     border: 1px solid var(--glass-line) !important;
@@ -1380,6 +1418,9 @@
    modulos piden sus frases con CNAIdioma.t(clave).                      */
 (function () {
   var D = {
+    anuncio1:      ['Reserve ahora y aproveche las tarifas especiales de fin de a\u00f1o',
+                    'Book now and get our special end of year rates'],
+    anuncio2:      ['Vuelos privados sobre El Salvador', 'Private flights over El Salvador'],
     titulo:        ['Reserve su vuelo \u00b7 Cielo Norte Aviaci\u00f3n', 'Book a Flight \u00b7 Cielo Norte Aviaci\u00f3n'],
     heroTag:       ['Solicitud de reserva', 'Flight Booking Request'],
     heroH1:        ['Reserve su<br><em>vuelo privado</em>', 'Reserve Your<br><em>Private Flight</em>'],
@@ -1569,6 +1610,14 @@
     <div class="dp-weekday">Sa</div>
   </div>
   <div class="dp-grid" id="dpGrid"></div>
+</div>
+
+<!-- BARRA DE ANUNCIO -->
+<div class="anuncio" role="status">
+  <div class="anuncio-pista">
+    <div class="anuncio-grupo"><span data-t="anuncio1">Book now and get our special end of year rates</span><span data-t="anuncio2">Private flights over El Salvador</span><span data-t="anuncio1">Book now and get our special end of year rates</span><span data-t="anuncio2">Private flights over El Salvador</span></div>
+    <div class="anuncio-grupo" aria-hidden="true"><span data-t="anuncio1">Book now and get our special end of year rates</span><span data-t="anuncio2">Private flights over El Salvador</span><span data-t="anuncio1">Book now and get our special end of year rates</span><span data-t="anuncio2">Private flights over El Salvador</span></div>
+  </div>
 </div>
 
 <!-- HEADER -->
@@ -2408,6 +2457,8 @@
     initialCountry: 'sv',
     preferredCountries: ['sv', 'us', 'mx', 'gt', 'hn', 'ni', 'cr', 'pa'],
     separateDialCode: true,
+    /* la lista se cuelga del body: asi queda encima de las tarjetas y nada la recorta */
+    dropdownContainer: document.body,
     utilsScript: 'https://cdn.jsdelivr.net/npm/intl-tel-input@18/build/js/utils.js',
   });
 </script>
