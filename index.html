@@ -1061,6 +1061,47 @@
     background: rgba(11,18,32,0.08) !important; color: #0b1220 !important;
     border-color: rgba(11,18,32,0.18) !important;
   }
+
+  /* ── proximas horas recomendadas en el panel vacio ────────── */
+  .avail-empty.has-sugg { padding: 14px 0 2px; display: block; text-align: left; }
+  .sugg-title {
+    font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+    font-weight: 600; color: var(--ink-mute); margin: 0 0 9px;
+  }
+  .sugg-list { display: grid; gap: 7px; }
+  .sugg {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    width: 100%; text-align: left; cursor: pointer; font-family: inherit;
+    padding: 9px 13px; border-radius: 12px;
+    background: var(--glass-strong); border: 1px solid var(--glass-line);
+    color: var(--ink);
+    transition: background .15s ease, border-color .15s ease, transform .15s ease;
+  }
+  .sugg:hover { background: rgba(255,255,255,0.20); border-color: var(--glass-line-2); transform: translateY(-1px); }
+  .sugg:focus-visible {
+    outline: none; border-color: rgba(56,189,248,0.85);
+    box-shadow: 0 0 0 4px rgba(56,189,248,0.18);
+  }
+  .sugg-when { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+  .sugg-when b { font-size: 13px; font-weight: 600; letter-spacing: .2px; color: var(--ink); line-height: 1.35; }
+  .sugg-when small { font-size: 11px; color: var(--ink-mute); line-height: 1.35; }
+  .sugg-time { display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+  .sugg-time span { font-size: 13.5px; font-weight: 600; color: var(--ink); }
+  .sugg-time i {
+    font-style: normal; font-size: 8.5px; letter-spacing: 1px;
+    text-transform: uppercase; font-weight: 600;
+    padding: 2px 6px; border-radius: 999px;
+    background: rgba(56,189,248,0.16); color: #7dd3fc;
+    border: 1px solid rgba(56,189,248,0.38);
+  }
+  .avail-empty .sugg-foot {
+    margin: 11px 0 0; max-width: none; font-size: 11px;
+    color: var(--ink-mute); text-align: center;
+  }
+  .sugg-load {
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    padding: 10px 0 2px; font-size: 12.5px; color: var(--ink-mute);
+  }
   .ts-pill {
     display: flex !important; align-items: center; justify-content: center;
     min-height: 46px; padding: 0 8px !important;
@@ -1305,7 +1346,7 @@
 <div class="hero">
   <div class="hero-tag">Flight Booking Request</div>
   <h1>Reserve Your<br><em>Private Flight</em></h1>
-  <p>Check available dates on the calendar, fill in your details, and we'll confirm your booking within 24 hours.</p>
+  <p>Check available dates on the calendar, fill in your details, and we'll confirm your booking within one hour.</p>
 </div>
 
 <!-- DIVIDER -->
@@ -1322,7 +1363,7 @@
   <div class="panel">
     <div class="panel-header">
       <div class="panel-title">Flight Request</div>
-      <div class="panel-subtitle">Fill in your details and we'll confirm within 24 hours.</div>
+      <div class="panel-subtitle">Fill in your details and we'll confirm within one hour.</div>
     </div>
     <div class="panel-body">
 
@@ -1330,7 +1371,7 @@
       <div class="success-msg" id="successMsg">
         <img src="https://raw.githubusercontent.com/durias-emp/Empoderar-Website/main/comprobado.png" alt="Confirmed" style="width:80px;height:80px;margin:0 auto 20px;display:block;">
         <h3>Request Received!</h3>
-        <p>Thank you for your booking request. Our team will contact you within 24 hours to confirm your flight details.</p>
+        <p>Thank you for your booking request. Our team will contact you within one hour to confirm your flight details.</p>
         <p style="font-size: 13px; margin-top: 16px;">Questions? <a href="https://wa.me/50377458200" style="color:#0f172a;font-weight:600;">WhatsApp us →</a></p>
       </div>
 
@@ -1511,11 +1552,18 @@
         <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;">
           <tbody id="recapRows"></tbody>
         </table>
-        <p style="font-size:12px;color:#64748b;margin-top:20px;line-height:1.6;text-align:center;">We'll reach out via WhatsApp or email within 24 hours.</p>
+        <p style="font-size:12px;color:#64748b;margin-top:20px;line-height:1.6;text-align:center;">We'll reach out via WhatsApp or email within one hour.</p>
       </div>
       <div class="avail-empty" id="availEmpty">
-        <div class="avail-icon">📅</div>
-        <p>Pick a date on the left and we'll show you what's available that day.</p>
+        <div id="suggFallback">
+          <div class="avail-icon">📅</div>
+          <p>Pick a date on the left and we'll show you what's available that day.</p>
+        </div>
+        <div id="suggWrap" style="display:none;">
+          <p class="sugg-title" id="suggTitle">Soonest openings</p>
+          <div class="sugg-list" id="suggList"></div>
+          <p class="sugg-foot">Tap one to start, or pick any other date on the left.</p>
+        </div>
       </div>
       <div id="availContent" style="display:none;">
         <div class="avail-date-label" id="availDateLabel"></div>
@@ -1727,6 +1775,7 @@
     // Show right panel
     document.getElementById('availEmpty').style.display = 'none';
     document.getElementById('availContent').style.display = 'block';
+    document.getElementById('rightPanelSubtitle').textContent = 'Open time slots for the date you picked';
     document.getElementById('availDateLabel').textContent =
       dateObj.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
     document.getElementById('availLoading').style.display = 'flex';
@@ -1810,6 +1859,17 @@
         ${slot.label}
       </button>`;
     }).join('');
+
+    /* si el usuario llego aqui desde una hora sugerida, la dejamos ya elegida */
+    if (window.__cnaHoraPendiente) {
+      const pend = window.__cnaHoraPendiente;
+      window.__cnaHoraPendiente = null;
+      const pill = tsGrid.querySelector(`.ts-pill[data-slot="${pend}"]:not(.ts-busy)`);
+      if (pill) {
+        pill.click();
+        if (window.innerWidth <= 980) pill.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      }
+    }
   }
 
   function selectTimeSlot(btn, value, label) {
@@ -1829,6 +1889,143 @@
     const pill = document.querySelector(`.ts-pill[data-slot="${value}"]:not(.ts-busy)`);
     if (pill) { pill.click(); pill.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }
   }
+
+  /* ── Proximas horas recomendadas ───────────────────────────────────
+     El panel derecho ya no arranca vacio: busca en el calendario los
+     primeros dias con cupo y propone una hora por dia, la mejor para
+     volar. Un toque deja fecha y hora puestas en el formulario.        */
+  (function () {
+    var MAX_SUGERENCIAS = 3;      // cuantas tarjetas mostramos
+    var VENTANA_DIAS    = 12;     // hasta donde miramos hacia adelante
+    var LOTE            = 3;      // dias que consultamos a la vez
+    var CACHE_MS        = 10 * 60 * 1000;
+
+    /* por que esa hora y no otra: lo que el pasajero gana volando a esa hora */
+    var RAZON = {
+      '08:00': 'Calmest air of the day',
+      '09:00': 'Clear skies, sharpest photos',
+      '10:00': 'Even light over the volcano',
+      '11:00': 'Wide view of the coastline',
+      '12:00': 'Turquoise water at its brightest',
+      '13:00': 'Easy midday departure',
+      '14:00': 'Strong colour over the lake',
+      '15:00': 'Right before golden hour',
+      '16:00': 'Golden hour over the Pacific',
+      '17:00': 'Sunset from the air'
+    };
+    /* orden de preferencia por tarjeta: asi las tres propuestas no se repiten
+       y el pasajero compara hora dorada, manana limpia y atardecer */
+    var PREFERENCIA = [
+      ['16:00','15:00','17:00','09:00','08:00','10:00','11:00','14:00','13:00','12:00'],
+      ['08:00','09:00','10:00','17:00','16:00','15:00','11:00','14:00','13:00','12:00'],
+      ['17:00','16:00','09:00','08:00','15:00','10:00','11:00','14:00','13:00','12:00']
+    ];
+
+    function iso(d) { return d.toLocaleDateString('sv-SE'); }
+    function etiqueta(v) {
+      var s = TIME_SLOTS.filter(function (x) { return x.value === v; })[0];
+      return s ? s.label : v;
+    }
+
+    function ocupadasDe(fechaIso) {
+      var llave = 'cna_av_' + fechaIso;
+      try {
+        var c = JSON.parse(sessionStorage.getItem(llave) || 'null');
+        if (c && Date.now() - c.t < CACHE_MS) return Promise.resolve(c.h);
+      } catch (e) {}
+      return fetch(APPS_SCRIPT_URL + '?date=' + fechaIso)
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          var horas = [];
+          (data.busy || []).forEach(function (ev) {
+            var ini = new Date(ev.start), fin = new Date(ev.end);
+            TIME_SLOTS.forEach(function (slot) {
+              var h = parseInt(slot.value, 10);
+              var a = new Date(fechaIso + 'T' + slot.value + ':00');
+              var b = new Date(fechaIso + 'T' + String(h + 1).padStart(2, '0') + ':00:00');
+              if (ini < b && fin > a && horas.indexOf(slot.value) < 0) horas.push(slot.value);
+            });
+          });
+          try { sessionStorage.setItem(llave, JSON.stringify({ t: Date.now(), h: horas })); } catch (e) {}
+          return horas;
+        });
+    }
+
+    function mejorHoraLibre(ocupadas, turno) {
+      var orden = PREFERENCIA[turno % PREFERENCIA.length];
+      for (var i = 0; i < orden.length; i++) {
+        if (ocupadas.indexOf(orden[i]) < 0) return orden[i];
+      }
+      return null;
+    }
+
+    function pintar(lista) {
+      var caja = document.getElementById('suggList');
+      caja.innerHTML = lista.map(function (s) {
+        return '<button type="button" class="sugg" onclick="cnaElegirSugerencia(\'' + s.iso + '\',\'' + s.hora + '\')">' +
+                 '<span class="sugg-when"><b>' + s.dia + '</b><small>' + RAZON[s.hora] + '</small></span>' +
+                 '<span class="sugg-time"><span>' + etiqueta(s.hora) + '</span><i>Open</i></span>' +
+               '</button>';
+      }).join('');
+      document.getElementById('suggFallback').style.display = 'none';
+      document.getElementById('suggWrap').style.display = 'block';
+      document.getElementById('availEmpty').classList.add('has-sugg');
+      document.getElementById('rightPanelSubtitle').textContent = 'Soonest openings, or pick your own date';
+    }
+
+    function buscar() {
+      if (!APPS_SCRIPT_URL) return;
+      var hoy = new Date(); hoy.setHours(0, 0, 0, 0);
+      var encontradas = [];
+      var dia = 1;                       /* empezamos manana: volamos con reserva anticipada */
+
+      function siguienteLote() {
+        if (encontradas.length >= MAX_SUGERENCIAS || dia > VENTANA_DIAS) return Promise.resolve();
+        var fechas = [];
+        for (var i = 0; i < LOTE && dia <= VENTANA_DIAS; i++, dia++) {
+          var d = new Date(hoy.getTime()); d.setDate(d.getDate() + dia);
+          fechas.push(d);
+        }
+        return Promise.all(fechas.map(function (d) {
+          return ocupadasDe(iso(d)).then(
+            function (h) { return { d: d, h: h }; },
+            function ()  { return null; }
+          );
+        })).then(function (res) {
+          res.forEach(function (r) {
+            if (!r || encontradas.length >= MAX_SUGERENCIAS) return;
+            var hora = mejorHoraLibre(r.h, encontradas.length);
+            if (!hora) return;
+            encontradas.push({
+              iso:  iso(r.d),
+              hora: hora,
+              dia:  r.d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })
+            });
+          });
+          return siguienteLote();
+        });
+      }
+
+      siguienteLote().then(function () {
+        /* si ya eligio una fecha mientras buscabamos, no le movemos el panel */
+        var vacio = document.getElementById('availEmpty');
+        if (encontradas.length && vacio && vacio.style.display !== 'none') pintar(encontradas);
+      }).catch(function () {});
+    }
+
+    window.cnaElegirSugerencia = function (fechaIso, hora) {
+      var p = fechaIso.split('-');
+      var y = parseInt(p[0], 10), m = parseInt(p[1], 10) - 1, d = parseInt(p[2], 10);
+      window.__cnaHoraPendiente = hora;
+      dpCurrent = new Date(y, m, 1);
+      dpSelect(y, m, d);
+    };
+
+    window.addEventListener('load', function () {
+      if ('requestIdleCallback' in window) requestIdleCallback(buscar, { timeout: 2500 });
+      else setTimeout(buscar, 1200);
+    });
+  })();
 
   function toggleCalendar() {
     const panel = document.getElementById('datepickerPanel');
