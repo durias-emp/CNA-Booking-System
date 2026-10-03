@@ -572,8 +572,9 @@
   }
   .divider-line { flex: 1; height: 1px; background: rgba(255,255,255,0.3); }
   .divider-text {
+    display: flex; flex-direction: column; align-items: center; gap: 7px;
     font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase;
-    color: rgba(255,255,255,0.7);
+    color: rgba(255,255,255,0.7); text-align: center; line-height: 1.2;
   }
 
   /* ── FOOTER: mismas tres columnas del sitio, con el vidrio de esta pagina ── */
@@ -1471,8 +1472,8 @@
     heroH1:        ['Reserve su<br><em>vuelo privado</em>', 'Reserve Your<br><em>Private Flight</em>'],
     heroP:         ['Vea las fechas disponibles en el calendario, complete sus datos y le confirmamos su reserva en una hora.',
                     "Check available dates on the calendar, fill in your details, and we'll confirm your booking within one hour."],
-    pasos:         ['Paso 1: vea la disponibilidad \u00b7 Paso 2: env\u00ede su solicitud',
-                    'Step 1: Check availability \u00b7 Step 2: Submit your request'],
+    paso1:         ['Paso 1: vea la disponibilidad', 'Step 1: Check availability'],
+    paso2:         ['Paso 2: env\u00ede su solicitud', 'Step 2: Submit your request'],
 
     formTitulo:    ['Solicitud de vuelo', 'Flight Request'],
     formSub:       ['Complete sus datos y le confirmamos en una hora.', "Fill in your details and we'll confirm within one hour."],
@@ -1679,7 +1680,10 @@
 <!-- DIVIDER -->
 <div class="divider">
   <div class="divider-line"></div>
-  <div class="divider-text" data-t="pasos">Step 1: Check availability · Step 2: Submit your request</div>
+  <div class="divider-text">
+    <span data-t="paso1">Step 1: Check availability</span>
+    <span data-t="paso2">Step 2: Submit your request</span>
+  </div>
   <div class="divider-line"></div>
 </div>
 
