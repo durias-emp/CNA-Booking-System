@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0aa0e8">
-<title>Book a Flight — Cielo Norte Aviación</title>
+<title>Book a Flight · Cielo Norte Aviación</title>
 <link rel="icon" href="favicon.png?v=2" type="image/png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,700&family=Poppins:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
@@ -28,7 +28,7 @@
   html { scroll-behavior: smooth; }
 
   body {
-    background: #29b6f6;
+    background: #05101f;
     color: var(--white);
     font-family: 'Poppins', sans-serif;
     font-weight: 300;
@@ -37,16 +37,18 @@
   }
 
   /* ── BACKGROUND ── */
-  .bg-layer {
+  /* la aurora, fondo vivo de toda la pagina */
+  #auroraCanvas {
     position: fixed; inset: 0; z-index: 0;
-    background: linear-gradient(180deg, #0891d4 0%, #29b6f6 60%, #38bdf8 100%);
+    width: 100%; height: 100%;
+    display: block; pointer-events: none;
   }
-  .bg-grid {
-    position: fixed; inset: 0; z-index: 0; opacity: 0.04;
-    background-image:
-      linear-gradient(rgba(255,255,255,0.8) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.8) 1px, transparent 1px);
-    background-size: 60px 60px;
+  /* velo que sostiene la lectura del texto blanco sobre la aurora */
+  .bg-layer {
+    position: fixed; inset: 0; z-index: 1; pointer-events: none;
+    background: linear-gradient(180deg,
+      rgba(5,16,31,0.42) 0%, rgba(5,16,31,0.16) 42%,
+      rgba(5,16,31,0.26) 74%, rgba(5,16,31,0.52) 100%);
   }
 
   /* ── HEADER ── */
@@ -120,12 +122,15 @@
 
   /* ── PANEL ── */
   .panel {
-    background: rgba(255,255,255,0.92);
-    border: 1px solid rgba(255,255,255,0.6);
+    position: relative;
+    background: rgba(250,252,255,0.86);
+    border: 1px solid rgba(255,255,255,0.65);
     border-radius: 16px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.12), 0 1px 0 rgba(255,255,255,0.4) inset;
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(18px);
+            backdrop-filter: blur(18px);
+    box-shadow:
+      0 28px 70px rgba(2,8,20,0.45),
+      0 1px 0 rgba(255,255,255,0.75) inset;
     overflow: hidden;
     animation: fadeUp 0.7s ease 0.3s both;
     color: #0f172a;
@@ -243,7 +248,7 @@
     margin-bottom: -14px;
   }
   .tour-dropdown.open {
-    max-height: 600px;
+    max-height: 1000px;
     opacity: 1;
     margin-top: 4px;
     margin-bottom: 0;
@@ -315,7 +320,7 @@
     color: #64748b; font-weight: 500;
   }
 
-  /* duration pill — overlaid top-left on image */
+  /* duration pill: overlaid top-left on image */
   .tour-duration {
     position: absolute; top: 10px; left: 10px;
     background: rgba(15,23,42,0.82);
@@ -582,11 +587,39 @@
   footer a { color: #ffffff; text-decoration: none; font-weight: 500; }
   footer a:hover { color: #e0f4ff; }
 
+
+  /* AURORA: banda inferior */
+  .aurora-band {
+    position: relative; z-index: 10;
+    margin-top: 0;
+    background: linear-gradient(180deg,
+      rgba(5,16,31,0) 0%, rgba(5,16,31,0.55) 45%, rgba(5,16,31,0.88) 100%);
+  }
+  .aurora-inner {
+    position: relative; z-index: 2;
+    min-height: 300px;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 120px 48px 0 48px;
+  }
+  .aurora-claim {
+    text-align: center; color: #ffffff;
+    font-size: 26px; font-weight: 600; letter-spacing: -0.4px;
+    margin: 0 0 8px 0;
+  }
+  .aurora-sub {
+    text-align: center; color: rgba(255,255,255,0.72);
+    font-size: 14px; margin: 0 0 40px 0;
+  }
+  @media (max-width: 768px) {
+    .aurora-inner { padding: 150px 24px 0 24px; min-height: 340px; }
+    .aurora-claim { font-size: 21px; }
+  }
+
   /* ── DATE PICKER ── */
   .datepicker-wrap { position: relative; }
   .datepicker-btn {
     width: 100%; padding: 10px 14px;
-    background: #fff; border: 1px solid #d1d5db; border-radius: 8px;
+    background: rgba(255,255,255,0.82); border: 1px solid rgba(203,213,225,0.9); border-radius: 8px;
     font-family: 'Poppins', sans-serif; font-size: 14px; color: #0f172a;
     text-align: left; cursor: pointer;
     display: flex; align-items: center; justify-content: space-between;
@@ -600,7 +633,7 @@
 
   .datepicker-panel {
     position: fixed; z-index: 1000;
-    background: #fff; border: 1px solid #e2e8f0; border-radius: 12px;
+    background: rgba(255,255,255,0.72); border: 1px solid rgba(255,255,255,0.6); border-radius: 12px;
     box-shadow: 0 8px 30px rgba(0,0,0,0.12);
     padding: 14px 16px 16px; width: 280px;
     display: none;
@@ -749,7 +782,7 @@
     font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase;
     padding: 2px 7px; border-radius: 999px; font-weight: 500;
   }
-  .avail-slot.free .slot-badge { background: #dcfce7; color: #166534; }
+  .avail-slot.free .slot-badge { background: rgba(56,189,248,0.16); color: #7dd3fc; }
   .avail-slot.busy .slot-badge { background: #f1f5f9; color: #94a3b8; }
 
   .avail-legend {
@@ -821,12 +854,427 @@
     .form-row { grid-template-columns: 1fr; }
     footer { flex-direction: column; gap: 12px; text-align: center; }
   }
+
+  /* ─────────────────────────────────────────────
+     VIDRIO LIQUIDO: superficie oscura translucida
+     sobre la aurora, al estilo de los paneles de Apple.
+     Todo el interior del formulario se invierte a texto claro.
+     ───────────────────────────────────────────── */
+  :root {
+    --glass:        rgba(255,255,255,0.07);
+    --glass-strong: rgba(255,255,255,0.12);
+    --glass-line:   rgba(255,255,255,0.14);
+    --glass-line-2: rgba(255,255,255,0.22);
+    --ink:          #ffffff;
+    --ink-soft:     rgba(255,255,255,0.72);
+    --ink-mute:     rgba(255,255,255,0.46);
+    --accent:       #38bdf8;
+  }
+
+  .panel {
+    background: var(--glass) !important;
+    border: 1px solid var(--glass-line) !important;
+    border-radius: 22px !important;
+    -webkit-backdrop-filter: blur(18px) !important;
+            backdrop-filter: blur(18px) !important;
+    box-shadow:
+      0 30px 80px rgba(0,0,0,0.45),
+      0 1px 0 rgba(255,255,255,0.22) inset,
+      0 0 0 0.5px rgba(255,255,255,0.06) inset !important;
+    color: var(--ink);
+  }
+  .panel-header { border-bottom: 1px solid var(--glass-line); }
+  .panel-title { color: var(--ink); }
+  .panel-subtitle, .tour-dropdown-label { color: var(--ink-soft); }
+  .field label { color: var(--ink-soft); font-weight: 400; }
+
+  /* campos */
+  .field input, .field select, .field textarea,
+  .datepicker-btn, .airport-pill-wrap, .airport-pill-wrap input {
+    background: var(--glass-strong) !important;
+    border: 1px solid var(--glass-line) !important;
+    color: var(--ink) !important;
+    border-radius: 12px !important;
+  }
+  .field input::placeholder, .field textarea::placeholder,
+  .airport-pill-wrap input::placeholder { color: var(--ink-mute) !important; }
+  .field input:focus, .field select:focus, .field textarea:focus,
+  .datepicker-btn:focus, .datepicker-btn.open, .airport-pill-wrap:focus-within {
+    border-color: rgba(56,189,248,0.8) !important;
+    box-shadow: 0 0 0 4px rgba(56,189,248,0.18) !important;
+    outline: none !important;
+  }
+  .field select option { background: #0b1726; color: #ffffff; }
+  .datepicker-btn { color: var(--ink) !important; }
+  .datepicker-btn.placeholder, .dp-weekday, .avail-empty, .avail-loading,
+  .avail-legend, .form-disclaimer, .tour-desc { color: var(--ink-mute) !important; }
+
+  /* pastillas de seleccion */
+  .pill, .trip-btn, .ts-pill, .avail-slot {
+    background: var(--glass-strong) !important;
+    border: 1px solid var(--glass-line) !important;
+    color: var(--ink-soft) !important;
+  }
+  .pill:hover, .trip-btn:hover, .ts-pill:hover:not(.ts-busy) {
+    background: rgba(255,255,255,0.18) !important;
+    border-color: var(--glass-line-2) !important;
+    color: var(--ink) !important;
+  }
+  .pill.active, .trip-btn.active, .ts-pill.ts-selected {
+    background: #ffffff !important;
+    border-color: #ffffff !important;
+    color: #0b1220 !important;
+    font-weight: 600;
+  }
+  .ts-pill.ts-busy, .avail-slot.busy {
+    background: rgba(255,255,255,0.05) !important;
+    color: rgba(255,255,255,0.3) !important;
+    border-color: rgba(255,255,255,0.08) !important;
+  }
+  .avail-slot.free { border-color: var(--glass-line) !important; color: var(--ink) !important; }
+
+  /* tarjetas de tour */
+  .tour-card {
+    background: var(--glass-strong) !important;
+    border: 1px solid var(--glass-line) !important;
+    border-radius: 16px !important;
+  }
+  .tour-card.selected { border-color: rgba(56,189,248,0.8) !important; }
+  .tour-info { background: transparent !important; }
+  .tour-name { color: var(--ink) !important; }
+
+  /* calendario */
+  .datepicker-panel {
+    background: rgba(12,22,38,0.82) !important;
+    border: 1px solid var(--glass-line) !important;
+    -webkit-backdrop-filter: blur(16px);
+            backdrop-filter: blur(16px);
+    box-shadow: 0 24px 60px rgba(0,0,0,0.5) !important;
+  }
+  .dp-nav, .dp-select, .dp-day { color: var(--ink) !important; background: transparent !important; }
+  .dp-nav:hover, .dp-select:hover,
+  .dp-day:hover:not(.dp-other):not(.dp-disabled) { background: rgba(255,255,255,0.14) !important; }
+  .dp-day.dp-other, .dp-day.dp-disabled { color: rgba(255,255,255,0.25) !important; }
+  .avail-date-label { color: var(--ink) !important; }
+
+  /* telefono y autocompletado */
+  .iti__country-list, .pac-container {
+    background: rgba(12,22,38,0.95) !important;
+    border: 1px solid var(--glass-line) !important;
+    color: var(--ink) !important;
+  }
+  .iti__country:hover, .pac-item:hover, .pac-item-selected {
+    background: rgba(255,255,255,0.12) !important;
+  }
+  .pac-item, .pac-item-query { color: var(--ink) !important; }
+  .iti__divider { border-color: var(--glass-line) !important; }
+
+  /* boton principal: solido y claro, el unico elemento opaco */
+  .submit-btn {
+    background: #ffffff !important;
+    color: #0b1220 !important;
+    border: none !important;
+    border-radius: 14px !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.35) !important;
+  }
+  .submit-btn:hover { background: #e8f4ff !important; }
+  .submit-btn:disabled { background: rgba(255,255,255,0.4) !important; color: #334155 !important; }
+
+  .success-msg h3 { color: var(--ink) !important; }
+  .success-msg p { color: var(--ink-soft) !important; }
+  .divider-line { background: rgba(255,255,255,0.18) !important; }
+
+  .time-slot-wrap { background: transparent !important; border: 0 !important; padding: 0 !important; }
+  .time-slots-locked, .avail-panel-inner {
+    background: var(--glass-strong) !important;
+    border: 1px solid var(--glass-line) !important;
+    color: var(--ink-mute) !important;
+    border-radius: 12px !important;
+  }
+  .tour-img-placeholder small { color: var(--ink-mute) !important; }
+  .airport-tag { background: var(--glass-strong) !important; color: var(--ink) !important;
+                 border: 1px solid var(--glass-line) !important; }
+  .airport-tag .tag-name { color: var(--ink) !important; }
+  .airport-tag .tag-remove { color: var(--ink-mute) !important; }
+
+  /* galeria en movimiento del tour elegido */
+  .tour-gallery {
+    margin-top: 16px;
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1px solid var(--glass-line);
+    background: rgba(255,255,255,0.05);
+    box-shadow: 0 18px 50px rgba(0,0,0,0.35);
+    opacity: 0; transform: translateY(8px);
+    transition: opacity .45s ease, transform .45s ease;
+  }
+  .tour-gallery.show { opacity: 1; transform: none; }
+  .tour-gallery canvas { display: block; width: 100%; }
+  .tour-gallery-caption {
+    padding: 10px 14px 12px;
+    font-size: 11px; letter-spacing: 1.4px; text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .tour-gallery-fallback { display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; }
+  .tour-gallery-fallback img { width: 100%; height: 120px; object-fit: cover; display: block; }
+
+  /* horas: una sola familia visual en el formulario y en disponibilidad */
+  .avail-slot {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    padding: 12px 14px !important;
+    border-radius: 12px !important;
+    background: var(--glass-strong) !important;
+    border: 1px solid var(--glass-line) !important;
+    color: var(--ink) !important;
+    transition: background .15s ease, border-color .15s ease, transform .15s ease;
+  }
+  .avail-slot.free { cursor: pointer; }
+  .avail-slot.free:hover {
+    background: rgba(255,255,255,0.20) !important;
+    border-color: var(--glass-line-2) !important;
+    transform: translateY(-1px);
+  }
+  .avail-slot.free:focus-visible {
+    outline: none; border-color: rgba(56,189,248,0.85) !important;
+    box-shadow: 0 0 0 4px rgba(56,189,248,0.18);
+  }
+  .avail-slot.busy { opacity: 0.45; cursor: not-allowed; }
+  .avail-slot .slot-time { color: inherit !important; font-weight: 500; }
+  .avail-slot .slot-badge {
+    font-size: 9.5px; letter-spacing: 1.1px; text-transform: uppercase; font-weight: 600;
+    padding: 4px 9px; border-radius: 999px;
+    background: rgba(56,189,248,0.16) !important;
+    color: #7dd3fc !important;
+    border: 1px solid rgba(56,189,248,0.38) !important;
+  }
+  .avail-slot.busy .slot-badge {
+    background: rgba(255,255,255,0.06) !important;
+    color: rgba(255,255,255,0.45) !important;
+    border-color: rgba(255,255,255,0.12) !important;
+  }
+  /* la hora elegida se ve igual en los dos lados */
+  .avail-slot.selected {
+    background: #ffffff !important; border-color: #ffffff !important;
+    color: #0b1220 !important; transform: none;
+  }
+  .avail-slot.selected .slot-badge {
+    background: rgba(11,18,32,0.08) !important; color: #0b1220 !important;
+    border-color: rgba(11,18,32,0.18) !important;
+  }
+  .ts-pill {
+    display: flex !important; align-items: center; justify-content: center;
+    min-height: 46px; padding: 0 8px !important;
+    border-radius: 12px !important;
+    font-size: 13px !important; font-weight: 500 !important;
+    white-space: nowrap;           /* todas de una sola linea, todas del mismo alto */
+    transition: background .15s ease, border-color .15s ease, transform .15s ease;
+  }
+  .ts-pill:hover:not(.ts-busy) { transform: translateY(-1px); }
+  .ts-pill.ts-busy { cursor: not-allowed; }
+  .avail-legend { color: var(--ink-mute) !important; }
+
+  /* TOURS: tres botones compactos */
+  .tour-cards { display: grid !important; grid-template-columns: repeat(3, 1fr) !important; gap: 10px !important; }
+  .tour-btn {
+    display: flex !important; align-items: center; gap: 10px;
+    padding: 10px !important; text-align: left;
+    border-radius: 14px !important; cursor: pointer; position: relative;
+    background: var(--glass-strong) !important;
+    border: 1px solid var(--glass-line) !important;
+    color: var(--ink) !important;
+    font-family: inherit;
+    transition: background .18s ease, border-color .18s ease, transform .18s ease;
+    overflow: hidden;
+  }
+  .tour-btn:hover { background: rgba(255,255,255,0.2) !important; transform: translateY(-2px); }
+  .tour-btn.selected {
+    border-color: rgba(56,189,248,0.9) !important;
+    background: rgba(56,189,248,0.14) !important;
+    box-shadow: 0 0 0 3px rgba(56,189,248,0.16);
+  }
+  .tb-thumb {
+    width: 46px; height: 46px; flex: 0 0 46px; border-radius: 10px; overflow: hidden;
+    background: rgba(255,255,255,0.08);
+  }
+  .tb-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .tb-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .tb-name {
+    font-size: 13.5px; font-weight: 600; color: var(--ink);
+    line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .tb-dur { font-size: 10.5px; letter-spacing: 1px; text-transform: uppercase; color: var(--ink-mute); }
+  .tb-check {
+    position: absolute; top: 8px; right: 8px;
+    width: 18px; height: 18px; color: #38bdf8;
+    opacity: 0; transform: scale(.7); transition: all .18s ease;
+  }
+  .tour-btn.selected .tb-check { opacity: 1; transform: scale(1); }
+  .tb-check svg { width: 100%; height: 100%; }
+
+  /* ESCENARIO: la galeria del tour elegido */
+  .tour-stage {
+    margin-top: 12px;
+    max-height: 0; opacity: 0; overflow: hidden;
+    border-radius: 16px;
+    transition: max-height .5s cubic-bezier(.22,1,.36,1), opacity .35s ease, margin-top .3s ease;
+  }
+  .tour-stage.open { max-height: 620px; opacity: 1; }
+  .tour-stage-media {
+    position: relative; border-radius: 16px; overflow: hidden;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--glass-line);
+  }
+  .tour-stage-media { padding: 10px; }
+  .tour-stage-fallback { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
+  .tour-stage-fallback img { height: 110px; object-fit: cover; }
+  .tour-stage-info { padding: 12px 2px 0; }
+  .tour-stage-name { font-size: 15px; font-weight: 600; color: var(--ink); }
+  .tour-stage-desc { font-size: 13px; line-height: 1.55; color: var(--ink-soft); margin-top: 3px; }
+  @media (max-width: 768px) {
+    .tour-cards { grid-template-columns: 1fr !important; }
+    .tour-stage.open { max-height: 720px; }
+  }
+
+  /* columnas exactamente iguales: 1fr respeta el ancho del contenido, minmax(0,1fr) no */
+  .time-slots-grid { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
+  .avail-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+
+  /* PERSIANAS: las fotos del tour como laminas que se abren */
+  .blinds {
+    display: flex; gap: 12px; height: 300px;
+    touch-action: pan-y;
+  }
+  .blind {
+    position: relative; flex: 1 1 0; min-width: 46px;
+    border-radius: 18px; overflow: hidden; cursor: pointer;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--glass-line);
+    transform-origin: center;
+    /* curva larga y sin rebote: el movimiento se siente continuo */
+    transition: flex-grow 1s cubic-bezier(.22,1,.36,1),
+                filter .9s cubic-bezier(.22,1,.36,1);
+  }
+  .blind img {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; display: block;
+    filter: brightness(.55) saturate(1.05);
+    transform: scale(1.08);
+    transition: filter 1s cubic-bezier(.22,1,.36,1),
+                transform 1.6s cubic-bezier(.22,1,.36,1);
+  }
+  .blind.active { flex-grow: 7; }
+  .blind.active img { filter: none; transform: scale(1); }
+  .blind::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(0deg, rgba(5,16,31,0.55) 0%, rgba(5,16,31,0) 45%);
+    opacity: .9; transition: opacity .4s ease; pointer-events: none;
+  }
+  .blind.active::after { opacity: .55; }
+  .blinds-dots { display: flex; gap: 6px; justify-content: center; margin-top: 10px; }
+  .blinds-dot {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: rgba(255,255,255,0.25); transition: all .3s ease;
+  }
+  .blinds-dot.on { background: #7dd3fc; width: 16px; border-radius: 3px; }
+  @media (max-width: 768px) {
+    .blinds { height: 230px; gap: 8px; }
+    .blind { border-radius: 16px; }
+    .blind.active { flex-grow: 8; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .blind, .blind img { transition: none; }
+  }
+
+  /* TOURS: acordeon de texto, la foto es la recompensa de elegir */
+  .tour-acc { display: flex; flex-direction: column; gap: 8px; }
+  .tour-item { display: block; }
+  .tour-row {
+    display: flex !important; align-items: center; gap: 10px;
+    width: 100%; padding: 14px 16px !important;
+    border-radius: 14px !important; cursor: pointer; text-align: left;
+    background: var(--glass-strong) !important;
+    border: 1px solid var(--glass-line) !important;
+    color: var(--ink) !important; font-family: inherit;
+    transition: background .2s ease, border-color .2s ease;
+  }
+  .tour-row:hover { background: rgba(255,255,255,0.2) !important; }
+  .tr-name { flex: 1 1 auto; font-size: 14.5px; font-weight: 600; line-height: 1.2; }
+  .tr-dur {
+    flex: 0 0 auto; font-size: 10.5px; letter-spacing: 1.1px;
+    text-transform: uppercase; color: var(--ink-mute);
+  }
+  .tr-chev {
+    flex: 0 0 auto; width: 16px; height: 16px; color: var(--ink-mute);
+    transition: transform .3s ease, color .3s ease;
+  }
+  .tr-chev svg { width: 100%; height: 100%; display: block; }
+  .tour-row.selected {
+    background: rgba(255,255,255,0.16) !important;
+    border-color: var(--glass-line) !important;
+    border-bottom-color: transparent !important;
+    border-bottom-left-radius: 0 !important; border-bottom-right-radius: 0 !important;
+  }
+  .tour-row.selected .tr-chev { transform: rotate(90deg); color: var(--ink-soft); }
+
+  .tour-panel {
+    max-height: 0; opacity: 0; overflow: hidden;
+    border: 1px solid transparent;
+    border-top: 0; border-radius: 0 0 14px 14px;
+    transition: max-height .55s cubic-bezier(.2,1,.3,1), opacity .35s ease, padding .35s ease;
+    padding: 0 10px;
+  }
+  .tour-panel.open {
+    max-height: 420px; opacity: 1; padding: 10px;
+    background: rgba(255,255,255,0.04);
+    border-color: var(--glass-line);
+  }
+  .tour-panel-desc {
+    font-size: 12.5px; line-height: 1.55; color: var(--ink-soft);
+    padding: 10px 4px 2px;
+  }
+  @media (max-width: 768px) { .tour-panel.open { max-height: 460px; } }
+
+  /* TOURS: cada opcion es UNA sola pieza, sin costuras internas */
+  .tour-item {
+    border: 1px solid var(--glass-line);
+    border-radius: 18px;
+    overflow: hidden;
+    background: var(--glass-strong);
+    transition: background .3s ease, border-color .3s ease;
+  }
+  .tour-item:hover { background: rgba(255,255,255,0.16); }
+  .tour-item.abierto {
+    background: rgba(255,255,255,0.14);
+    border-color: rgba(255,255,255,0.22);
+  }
+  /* el encabezado deja de ser una caja: es la cabecera de la pieza */
+  .tour-row, .tour-row.selected, .tour-row:hover {
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    width: 100%;
+    padding: 15px 16px !important;
+    box-shadow: none !important;
+  }
+  /* el panel no tiene borde propio: lo contiene la pieza */
+  .tour-panel {
+    border: 0 !important; border-radius: 0 !important;
+    background: transparent !important;
+    padding: 0 10px !important;
+  }
+  .tour-panel.open { padding: 0 10px 12px !important; }
+  /* las laminas, sin borde y con separacion fina */
+  .blinds { gap: 6px; }
+  .blind { border: 0 !important; border-radius: 12px; }
+  .blinds-dots { margin-top: 12px; }
+  .tour-panel-desc { padding: 12px 6px 0 !important; }
+
 </style>
 </head>
 <body>
 
+<canvas id="auroraCanvas" aria-hidden="true"></canvas>
 <div class="bg-layer"></div>
-<div class="bg-grid"></div>
 <div class="dp-backdrop" id="dpBackdrop" onclick="toggleCalendar()"></div>
 <div class="datepicker-panel" id="datepickerPanel">
   <div class="dp-header">
@@ -913,52 +1361,49 @@
           </div>
         </div>
 
-        <!-- Tour cards — shown when Tourist is selected -->
+        <!-- Tour cards: shown when Tourist is selected -->
         <div class="tour-dropdown" id="tourDropdown">
           <div class="tour-dropdown-label">Select your tour</div>
-          <div class="tour-cards">
-
-            <div class="tour-card" data-tour="San Salvador City" onclick="selectTour(this)">
-              <div class="tour-img">
-                <img src="https://raw.githubusercontent.com/durias-emp/Empoderar-Website/main/san-salvador-1.avif" alt="San Salvador City Tour">
-                <div class="tour-duration">20 min</div>
-                <div class="tour-check"><svg viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="256" cy="256" r="256" fill="#0f172a"/><path d="M140 270l90 90 142-160" stroke="#fff" stroke-width="52" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-              </div>
-              <div class="tour-info">
-                <div class="tour-name">San Salvador</div>
-                <div class="tour-desc">A quick scenic flight over San Salvador's historic downtown and key areas for a unique view from above.</div>
-              </div>
-            </div>
-
-            <div class="tour-card" data-tour="Surf City" onclick="selectTour(this)">
-              <div class="tour-img">
-                <img src="https://raw.githubusercontent.com/durias-emp/Empoderar-Website/main/surf-city.jpg" alt="Surf City Tour">
-                <div class="tour-duration">30 min</div>
-                <div class="tour-check"><svg viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="256" cy="256" r="256" fill="#0f172a"/><path d="M140 270l90 90 142-160" stroke="#fff" stroke-width="52" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-              </div>
-              <div class="tour-info">
-                <div class="tour-name">Surf City</div>
-                <div class="tour-desc">A scenic tour flight along Surf City's coastline and iconic beaches for a unique view from above.</div>
+          <div class="tour-acc">
+            <div class="tour-item">
+              <button type="button" class="tour-card tour-row" data-tour="San Salvador City" onclick="selectTour(this)">
+                <span class="tr-name">San Salvador</span>
+                <span class="tr-dur">20 min</span>
+                <span class="tr-chev"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              </button>
+              <div class="tour-panel" data-for="San Salvador City">
+                <div class="tour-panel-media"></div>
+                <div class="tour-panel-desc"></div>
               </div>
             </div>
-
-            <div class="tour-card" data-tour="Lake and Volcanoes" onclick="selectTour(this)">
-              <div class="tour-img">
-                <img src="https://raw.githubusercontent.com/durias-emp/Empoderar-Website/main/lake-volcanoes.jpg" alt="Lake and Volcanoes Tour">
-                <div class="tour-duration">1 hour</div>
-                <div class="tour-check"><svg viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="256" cy="256" r="256" fill="#0f172a"/><path d="M140 270l90 90 142-160" stroke="#fff" stroke-width="52" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-              </div>
-              <div class="tour-info">
-                <div class="tour-name">Lake and Volcanoes</div>
-                <div class="tour-desc">Spectacular tour over volcanic landscapes and Lake Coatepeque in one unforgettable journey.</div>
+            <div class="tour-item">
+              <button type="button" class="tour-card tour-row" data-tour="Surf City" onclick="selectTour(this)">
+                <span class="tr-name">Surf City</span>
+                <span class="tr-dur">30 min</span>
+                <span class="tr-chev"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              </button>
+              <div class="tour-panel" data-for="Surf City">
+                <div class="tour-panel-media"></div>
+                <div class="tour-panel-desc"></div>
               </div>
             </div>
-
+            <div class="tour-item">
+              <button type="button" class="tour-card tour-row" data-tour="Lake and Volcanoes" onclick="selectTour(this)">
+                <span class="tr-name">Lake and Volcanoes</span>
+                <span class="tr-dur">1 hour</span>
+                <span class="tr-chev"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              </button>
+              <div class="tour-panel" data-for="Lake and Volcanoes">
+                <div class="tour-panel-media"></div>
+                <div class="tour-panel-desc"></div>
+              </div>
+            </div>
           </div>
+
           <input type="hidden" name="tour" id="selectedTour">
         </div>
 
-        <!-- Executive section — shown when Executive is selected -->
+        <!-- Executive section: shown when Executive is selected -->
         <div class="exec-dropdown" id="execDropdown">
           <div class="exec-inner">
 
@@ -1031,6 +1476,12 @@
               <option>4 (max)</option>
             </select>
           </div>
+          <div class="field">
+            <label id="refLabel">Content creator code</label>
+            <input type="text" name="referral_code" id="refInput" maxlength="20"
+                   autocomplete="off" spellcheck="false" placeholder="Optional">
+            <p id="refMsg" style="display:none;font-size:12px;line-height:1.4;margin:2px 0 0 0;"></p>
+          </div>
         </div>
 
 
@@ -1073,8 +1524,8 @@
         </div>
         <div class="avail-grid" id="availGrid"></div>
         <div class="avail-legend" id="availLegend" style="display:none;">
-          <span><i style="background:#dcfce7; border:1px solid #bbf7d0;"></i> Available</span>
-          <span><i style="background:#f1f5f9;"></i> Booked</span>
+          <span><i style="background:rgba(56,189,248,0.35); border:1px solid rgba(56,189,248,0.6);"></i> Available</span>
+          <span><i style="background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.28);"></i> Booked</span>
         </div>
       </div>
     </div>
@@ -1083,10 +1534,16 @@
 </div>
 
 <!-- FOOTER -->
-<footer>
-  <div>© 2026 Cielo Norte Aviación · COA No. 007-TNA · <a href="https://www.cielonorteaviacion.com">cielonorteaviacion.com</a></div>
-  <div>Questions? <a href="https://wa.me/50377458200">WhatsApp us</a> · <a href="mailto:info@cielonorteaviacion.com">info@cielonorteaviacion.com</a></div>
-</footer>
+<section class="aurora-band" id="auroraBand">
+  <div class="aurora-inner">
+    <p class="aurora-claim" id="auroraClaim">El Salvador from above</p>
+    <p class="aurora-sub" id="auroraSub">Private helicopter flights · Certified operator COA 007-TNA</p>
+    <footer>
+      <div>© 2026 Cielo Norte Aviación · COA No. 007-TNA · <a href="https://www.cielonorteaviacion.com">cielonorteaviacion.com</a></div>
+      <div>Questions? <a href="https://wa.me/50377458200">WhatsApp us</a> · <a href="mailto:info@cielonorteaviacion.com">info@cielonorteaviacion.com</a></div>
+    </footer>
+  </div>
+</section>
 
 <script>
   // ── Service pill toggle + tour dropdown ──
@@ -1285,7 +1742,7 @@
     let busyHours = [];
 
     if (!APPS_SCRIPT_URL) {
-      // Demo mode — mock a couple of busy slots so the UI is visible
+      // Demo mode: mock a couple of busy slots so the UI is visible
       await new Promise(r => setTimeout(r, 700));
       busyHours = ['09:00', '11:00', '14:00'];
     } else {
@@ -1331,7 +1788,11 @@
       const past = !busy && pastHours.includes(slot.value);
       const cls  = (busy || past) ? 'busy' : 'free';
       const badge = past ? '' : busy ? 'Booked' : 'Open';
-      return `<div class="avail-slot ${cls}" data-slot="${slot.value}">
+      const elegible = cls === 'free';
+      return `<div class="avail-slot ${cls}" data-slot="${slot.value}"
+        ${elegible ? `role="button" tabindex="0"
+          onclick="pickFromAvail('${slot.value}')"
+          onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}"` : ''}>
         <span class="slot-time">${slot.label}</span>
         ${badge ? `<span class="slot-badge">${badge}</span>` : ''}
       </div>`;
@@ -1344,7 +1805,7 @@
     tsGrid.style.display = 'grid';
     tsGrid.innerHTML = TIME_SLOTS.map(slot => {
       const busy = busyHours.includes(slot.value) || pastHours.includes(slot.value);
-      return `<button type="button" class="ts-pill ${busy ? 'ts-busy' : ''}"
+      return `<button type="button" data-slot="${slot.value}" class="ts-pill ${busy ? 'ts-busy' : ''}"
         ${busy ? 'disabled' : `onclick="selectTimeSlot(this, '${slot.value}', '${slot.label}')"`}>
         ${slot.label}
       </button>`;
@@ -1353,14 +1814,20 @@
 
   function selectTimeSlot(btn, value, label) {
     document.querySelectorAll('.ts-pill').forEach(p => p.classList.remove('ts-selected'));
-    document.querySelectorAll('.avail-slot').forEach(s => s.classList.remove('sweeping'));
+    document.querySelectorAll('.avail-slot').forEach(s => s.classList.remove('sweeping', 'selected'));
     btn.classList.add('ts-selected');
     document.getElementById('timeValue').value = label;
     const rightSlot = document.querySelector(`.avail-slot[data-slot="${value}"]`);
     if (rightSlot) {
       void rightSlot.offsetWidth; // force reflow so animation restarts
-      rightSlot.classList.add('sweeping');
+      rightSlot.classList.add('sweeping', 'selected');
     }
+  }
+
+  /* elegir la hora desde el panel de disponibilidad: usa la misma pastilla del formulario */
+  function pickFromAvail(value) {
+    const pill = document.querySelector(`.ts-pill[data-slot="${value}"]:not(.ts-busy)`);
+    if (pill) { pill.click(); pill.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }
   }
 
   function toggleCalendar() {
@@ -1440,6 +1907,7 @@
       flight_time: payload.time,
       passengers: payload.passengers,
       reply_to: payload.email,
+      referral_code: (window.CNARef && window.CNARef.code()) || 'None',
     };
 
     const templateFields = isExecutive
@@ -1467,13 +1935,15 @@
           ? [['Tour', payload.tour || 'Not selected']]
           : [
               ['Trip Type', data.get('tripType') || 'One Way'],
-              ['From', data.get('execOrigin') || '—'],
-              ['To', data.get('execDest') || '—'],
+              ['From', data.get('execOrigin') || 'Not specified'],
+              ['To', data.get('execDest') || 'Not specified'],
             ]
         ),
         ['Date', document.getElementById('datepickerDisplay').textContent],
         ['Time', payload.time],
         ['Passengers', payload.passengers],
+        ...((window.CNARef && window.CNARef.code())
+            ? [[window.CNARef.t('recap'), window.CNARef.code()]] : []),
       ];
 
       document.getElementById('recapRows').innerHTML = recapItems.map(([label, value], i) => `
@@ -1572,6 +2042,366 @@
   (function() {
     emailjs.init('4JM2sWv5YfDp0KGMt');
   })();
+</script>
+
+<script>
+/* Programa de creadores de contenido. Todo lo que sigue es aditivo:
+   si algo falla, la reserva continua exactamente como antes. */
+(function () {
+  var SUPA_URL = 'https://bxclsonwpurefxjrtufs.supabase.co';
+  var SUPA_KEY = 'sb_publishable_Kk6lE-BPGh6gTvcnE_itGw_ITP_Pt5K';
+  var ALMACEN  = 'cna_ref';
+  var DIAS     = 30;
+
+  var ES = (navigator.language || 'en').toLowerCase().indexOf('es') === 0;
+  var T = {
+    label:   ES ? 'Codigo de creador de contenido' : 'Content creator code',
+    ph:      ES ? 'Opcional' : 'Optional',
+    ok:      ES ? 'Codigo aplicado: ' : 'Code applied: ',
+    bad:     ES ? 'Ese codigo no esta disponible. Su reserva continua normalmente.'
+                : 'That code is not available. Your booking continues normally.',
+    recap:   ES ? 'Codigo' : 'Code'
+  };
+
+  var input = document.getElementById('refInput');
+  var label = document.getElementById('refLabel');
+  var msg   = document.getElementById('refMsg');
+  if (!input) return;
+  label.textContent = T.label;
+  input.placeholder = T.ph;
+
+  var estado = { code: '', valido: false, fuente: 'typed' };
+
+  function api(ruta, cuerpo) {
+    return fetch(SUPA_URL + '/rest/v1/' + ruta, {
+      method: 'POST',
+      headers: {
+        'apikey': SUPA_KEY,
+        'Authorization': 'Bearer ' + SUPA_KEY,
+        'Content-Type': 'application/json',
+        'Content-Profile': 'commercial'
+      },
+      body: JSON.stringify(cuerpo)
+    });
+  }
+
+  function recordar(code) {
+    try {
+      localStorage.setItem(ALMACEN, JSON.stringify({
+        code: code, exp: Date.now() + DIAS * 864e5
+      }));
+    } catch (e) {}
+  }
+  function recordado() {
+    try {
+      var g = JSON.parse(localStorage.getItem(ALMACEN) || 'null');
+      if (g && g.exp > Date.now()) return g.code;
+      localStorage.removeItem(ALMACEN);
+    } catch (e) {}
+    return '';
+  }
+
+  function mostrar(ok, creador) {
+    msg.style.display = 'block';
+    msg.textContent = ok ? (T.ok + creador) : T.bad;
+    msg.style.color = ok ? '#7dd3fc' : '#fcd34d';
+  }
+
+  function validar(code, fuente) {
+    code = (code || '').trim().toUpperCase();
+    if (!code) {
+      estado = { code: '', valido: false, fuente: fuente };
+      msg.style.display = 'none';
+      return Promise.resolve(false);
+    }
+    return api('rpc/validate_referral_code', { p_code: code })
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        var fila = (d && d[0]) || { valid: false };
+        estado = { code: code, valido: !!fila.valid, fuente: fuente };
+        mostrar(estado.valido, fila.creator_name || '');
+        if (estado.valido) recordar(code);
+        return estado.valido;
+      })
+      .catch(function () { msg.style.display = 'none'; return false; });
+  }
+
+  /* El codigo escrito a mano manda sobre el recordado */
+  var pausa;
+  input.addEventListener('input', function () {
+    input.value = input.value.toUpperCase();
+    clearTimeout(pausa);
+    pausa = setTimeout(function () { validar(input.value, 'typed'); }, 400);
+  });
+
+  /* Al abrir: primero el enlace, si no el recordado */
+  var porEnlace = new URLSearchParams(location.search).get('ref');
+  if (porEnlace) {
+    input.value = porEnlace.trim().toUpperCase();
+    validar(input.value, 'link').then(function (ok) {
+      if (ok) api('rpc/log_referral_visit', { p_code: estado.code });
+    });
+  } else {
+    var guardado = recordado();
+    if (guardado) { input.value = guardado; validar(guardado, 'link'); }
+  }
+
+  window.CNARef = {
+    code:   function () { return estado.valido ? estado.code : ''; },
+    source: function () { return estado.fuente; },
+    t:      function (k) { return T[k]; }
+  };
+
+  /* Guardar la solicitud. Corre aparte del envio por correo:
+     si esto fallara, el correo al equipo sale igual. */
+  var form = document.getElementById('bookingForm');
+  form.addEventListener('submit', function () {
+    try {
+      var d = new FormData(form);
+      var fecha = (d.get('date') || '').match(/^\d{4}-\d{2}-\d{2}/);
+      var pax = parseInt(d.get('passengers'), 10);
+      api('booking_requests', {
+        name: (d.get('name') || '').trim(),
+        email: (d.get('email') || '').trim() || null,
+        phone: (window.iti ? window.iti.getNumber() : d.get('phone')) || null,
+        service_type: (document.querySelector('.pill.active input') || {}).value || null,
+        tour: d.get('tour') || null,
+        flight_date: fecha ? fecha[0] : null,
+        flight_time: d.get('time') || null,
+        passengers: isNaN(pax) ? null : pax,
+        origin: d.get('execOrigin') || d.get('origin') || null,
+        destination: d.get('execDest') || d.get('destination') || null,
+        notes: d.get('notes') || null,
+        referral_code: estado.valido ? estado.code : null,
+        referral_source: estado.valido ? estado.fuente : null,
+        locale: ES ? 'es' : 'en'
+      });
+    } catch (e) {}
+  });
+})();
+</script>
+
+
+<script id="auroraEngine">
+/* Aurora boreal en WebGL. Es decoracion: si el navegador no la soporta,
+   queda el azul de la marca y la pagina funciona igual. */
+(function () {
+  var FS = "precision highp float;\nuniform vec2 u_res;\nuniform float u_t;\nuniform vec3 u_deep;\nuniform vec3 u_horizon;\nuniform vec3 u_glow;\nuniform vec3 u_rim;\nuniform float u_drift;\nuniform float u_fold;\nuniform float u_freq;\nuniform vec2 u_dirv;\n\nfloat hash21(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7)))*43758.5453123); }\nfloat noise2(vec2 p){\n  vec2 ip = floor(p); vec2 u = fract(p);\n  u = u*u*(3.0-2.0*u);\n  return mix(mix(hash21(ip), hash21(ip+vec2(1.0,0.0)), u.x), mix(hash21(ip+vec2(0.0,1.0)), hash21(ip+vec2(1.0,1.0)), u.x), u.y);\n}\nfloat fbm3(vec2 p){\n  float v = 0.0; float a = 0.5;\n  mat2 rot = mat2(cos(0.5), sin(0.5), -sin(0.5), cos(0.5));\n  for (int i = 0; i < 3; i++) { v += a*noise2(p); p = rot*p*2.02 + vec2(37.0, 17.0); a *= 0.5; }\n  return v;\n}\nfloat fbm2(vec2 p){\n  float v = 0.0; float a = 0.5;\n  mat2 rot = mat2(cos(0.5), sin(0.5), -sin(0.5), cos(0.5));\n  for (int i = 0; i < 2; i++) { v += a*noise2(p); p = rot*p*2.02 + vec2(37.0, 17.0); a *= 0.5; }\n  return v;\n}\nvoid main(){\n  vec2 st = gl_FragCoord.xy/u_res - 0.5;\n  st.x *= u_res.x/u_res.y;\n  st = mat2(u_dirv.x, u_dirv.y, -u_dirv.y, u_dirv.x)*st;\n  float x = st.x;\n  float hv = st.y + 0.5; // 0 at the horizon foot, 1 at the zenith\n  float time = u_t*0.35;\n  // night everywhere: the ribbon is the only bright object. Just a weak\n  // pool of horizon light at the very foot of the frame\n  float hzp = 1.0 - smoothstep(0.0, 0.22, hv);\n  vec3 sky = mix(u_deep, u_horizon, hzp*hzp*0.18);\n  // how far the ribbon swoops across the frame: the Fold dial's main job\n  float amp = 0.05 + u_fold*0.22;\n  // one coherent field-aligned lean for every ray, breathing slowly\n  float tiltG = (noise2(vec2(time*0.11, 71.3)) - 0.5)*0.9;\n  // ONE spine, computed once: the companion strand is strictly parallel\n  // (offset only) \\u2014 independent phases enclose dark pockets between strands\n  float tiltR = (noise2(vec2(time*0.07, 41.7)) - 0.5)*0.35;\n  float wob = (fbm2(vec2(x*u_freq*0.6 + time*u_drift*0.3, time*0.09)) - 0.5)*1.6;\n  float ph = time*u_drift*0.7 + wob;\n  // freq is squared so the Scale dial genuinely commands the wave count;\n  // the second harmonic breaks the metronome sine into uneven crests\n  float sf = u_freq*u_freq*0.65;\n  float th = x*sf + ph;\n  float th2 = (x + 0.012)*sf + ph;\n  float wv = 0.5 + 0.5*(0.78*sin(th) + 0.22*sin(2.0*th + 2.1));\n  float wv2 = 0.5 + 0.5*(0.78*sin(th2) + 0.22*sin(2.0*th2 + 2.1));\n  float wave = (wv - 0.5)*2.0 + x*tiltR;\n  float slope = abs(wv2 - wv)/0.012;\n  vec3 aur = vec3(0.0);\n  float cover = 0.0;\n  for (int i = 0; i < 2; i++) {\n    float fi = float(i);\n    float freq = u_freq*(1.0 + fi*0.15);\n    float drift = u_drift*(0.75 + fi*0.25);\n    // depth meander: near stretches are tall and bright, far ones compact\n    float nr = smoothstep(0.35, 0.65, fbm2(vec2(x*freq*0.5 + time*drift*0.4 + fi*21.3, fi*3.77 + time*0.07)));\n    // the wig detail only textures the rays; the spine stays SMOOTH \\u2014\n    // wavy, never kinked\n    float wig = fbm3(vec2(x*freq*2.6 + time*drift + fi*3.7, fi*7.31 + time*0.13)) - 0.5;\n    float spine = 0.31 + fi*0.12 + amp*wave;\n    // a ribbon keeps constant PERPENDICULAR thickness: the vertical\n    // cross-section widens where the spine runs steep, and the edge-on fold\n    // stacks the line of sight into a bright knot\n    float m = slope*amp*2.0;\n    float widen = sqrt(1.0 + min(m*m*2.5, 5.0));\n    float s = (0.17 + u_fold*0.07)*(0.7 + nr*0.85)*(1.0 - fi*0.2)*widen;\n    float knotK = 1.0 + (0.25 + 1.15*u_fold)*smoothstep(1.1, 3.0, slope*amp*6.0);\n    // the life of the aurora: brightness SURGES travel along the band,\n    // the way real displays ripple lengthwise\n    float surge = 0.78 + 0.22*noise2(vec2(x*1.1 - time*1.3, 5.5 + fi*2.2));\n    float L = (0.6 + 0.4*nr)*knotK*surge;\n    float u = (hv - spine)/s; // ribbon-local altitude\n    // field-aligned rays: global lean + a gentle perspective fan, x-only\n    // octaves (a rotating fbm domain cross-hatches)\n    float xr = x*freq*(4.5 + 2.0*nr) + wig*2.2 + time*drift*1.6 + max(u, 0.0)*s*(tiltG + x*0.22)*3.0;\n    float yr = hv*0.8 + fi*9.13;\n    float v = 0.5*noise2(vec2(xr, yr)) + 0.28*noise2(vec2(xr*2.7 + 13.7, yr*1.7 + 5.2)) + 0.14*noise2(vec2(xr*6.1 + 31.9, yr*2.3 + 11.4)) + 0.08*noise2(vec2(xr*12.3 + 57.1, yr*2.9 + 23.7));\n    // quiet arc = homogeneous glow; storm = hard pickets. Fold morphs the gate\n    float soft = 0.55 + 0.45*smoothstep(0.3, 0.7, v);\n    float hard = 0.1 + 0.9*smoothstep(0.38, 0.6, v);\n    // low-frequency bundles: whole folds brighten, night shows between them\n    float bn = noise2(vec2(x*freq*1.4 + time*drift*0.8 + fi*17.3, fi*4.77));\n    // fast per-ray twinkle: single ray bundles blink in and out\n    float flick = 0.85 + 0.15*noise2(vec2(x*freq*3.1 + time*2.8, 7.7 + fi*3.0));\n    float rayK = mix(soft, hard, u_fold)*(0.45 + 0.55*smoothstep(0.26, 0.72, bn))*flick;\n    float kBody = 1.0 - 0.7*fi;\n    // NO lines anywhere: the whole aurora is one soft BEAM. An asymmetric\n    // gaussian around the spine \\u2014 tighter below, a long fade above \\u2014 so\n    // the light melts into the night in every direction\n    float d = u - 0.15;\n    float sig = d < 0.0 ? 0.26 : 0.55;\n    float beam = exp(-(d*d)/(2.0*sig*sig));\n    float body = beam*(0.28 + 0.72*rayK);\n    float k = kBody*L;\n    // colour lives inside the beam: the lightest tone burns the core, the\n    // body is the glow tone, the top thins toward deep, and the lower tail\n    // cools toward the horizon tone. All blends, no bands\n    float peakK = beam*beam*0.75;\n    vec3 gcol = mix(u_glow, u_rim, peakK);\n    gcol = mix(gcol, u_deep, smoothstep(0.35, 1.05, u)*0.5);\n    gcol = mix(gcol, u_horizon, (1.0 - smoothstep(-0.38, -0.12, d))*0.3);\n    // intensity rides the storminess: quiet arcs soft, storms blazing\n    float gB = body*(0.88 + u_fold*0.36)*k;\n    aur += gcol*gB;\n    cover += gB;\n  }\n  // hash-grid stars: kept clear of the horizon, the curtains and any\n  // daylight-bright palette\n  vec2 gp = vec2(x, hv)*60.0;\n  vec2 cell = floor(gp);\n  float hct = hash21(cell);\n  float starI = 0.0;\n  if (hct > 0.96) {\n    vec2 spos = vec2(hash21(cell + 11.3), hash21(cell + 27.7))*0.6 + 0.2;\n    float r = length(fract(gp) - spos);\n    float tw = 0.6 + 0.4*sin(u_t*(2.0 + hct*6.0) + hct*100.0);\n    float bmag = (hct - 0.96)/0.04;\n    starI = pow(max(0.0, 1.0 - r/0.14), 4.0)*(0.3 + 0.7*bmag)*tw;\n    starI *= smoothstep(0.03, 0.12, hv)*clamp(1.0 - cover*2.2, 0.0, 1.0);\n    float skyL = dot(sky, vec3(0.299, 0.587, 0.114));\n    starI *= 1.0 - smoothstep(0.25, 0.6, skyL);\n  }\n  vec3 col = clamp(sky + aur + vec3(0.95, 0.97, 1.0)*starI, 0.0, 1.0);\n  gl_FragColor = vec4(col, 1.0);\n}";
+  var VS = 'attribute vec2 p;void main(){gl_Position=vec4(p,0.0,1.0);}';
+
+  var lienzo = document.getElementById('auroraCanvas');
+  if (!lienzo) return;
+  var velo = document.querySelector('.bg-layer');
+  function sinWebGL() {
+    lienzo.style.display = 'none';
+    if (velo) velo.style.background =
+      'linear-gradient(180deg,#05101f 0%,#0a1f3a 48%,#0d2a4a 100%)';
+  }
+
+  var gl;
+  try { gl = lienzo.getContext('webgl') || lienzo.getContext('experimental-webgl'); } catch (e) {}
+  if (!gl) { sinWebGL(); return; }
+
+  function compilar(tipo, fuente) {
+    var sh = gl.createShader(tipo);
+    gl.shaderSource(sh, fuente); gl.compileShader(sh);
+    if (!gl.getShaderParameter(sh, gl.COMPILE_STATUS)) { console.warn(gl.getShaderInfoLog(sh)); return null; }
+    return sh;
+  }
+  var prog = gl.createProgram();
+  var vs = compilar(gl.VERTEX_SHADER, VS), fs = compilar(gl.FRAGMENT_SHADER, FS);
+  if (!vs || !fs) { sinWebGL(); return; }
+  gl.attachShader(prog, vs); gl.attachShader(prog, fs);
+  gl.bindAttribLocation(prog, 0, 'p');
+  gl.linkProgram(prog);
+  gl.useProgram(prog);
+
+  gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 3,-1, -1,3]), gl.STATIC_DRAW);
+  gl.enableVertexAttribArray(0);
+  gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
+
+  function u(n) { return gl.getUniformLocation(prog, n); }
+  var uRes = u('u_res'), uT = u('u_t');
+
+  /* Paleta CNA: noche profunda, horizonte azul marca, brillo cian */
+  gl.uniform3fv(u('u_deep'),    [0.024, 0.078, 0.153]);
+  gl.uniform3fv(u('u_horizon'), [0.039, 0.227, 0.388]);
+  gl.uniform3fv(u('u_glow'),    [0.192, 0.796, 1.000]);
+  gl.uniform3fv(u('u_rim'),     [0.557, 0.902, 1.000]);
+  gl.uniform1f(u('u_drift'), 0.62);
+  gl.uniform1f(u('u_fold'),  0.62);
+  gl.uniform1f(u('u_freq'),  1.80);
+  gl.uniform2fv(u('u_dirv'), [1.0, 0.0]);
+
+  var VELOCIDAD = 0.55;  /* ritmo de la aurora: mas bajo, mas calmo */
+  /* La aurora es suave: dibujarla a media resolucion no se nota y cuesta
+     cuatro veces menos. 30 cuadros por segundo bastan para algo tan lento. */
+  var ESCALA = 0.55, FPS = 30, MIN_MS = 1000 / FPS;
+  var dpr = ESCALA;
+  function medir() {
+    var w = Math.max(1, Math.round(window.innerWidth  * dpr));
+    var h = Math.max(1, Math.round(window.innerHeight * dpr));
+    if (lienzo.width !== w || lienzo.height !== h) {
+      lienzo.width = w; lienzo.height = h;
+      gl.viewport(0, 0, w, h);
+      /* encuadre: se le dice al shader que el marco es mas alto que el lienzo,
+         asi las cortinas suben desde el horizonte y llenan la pantalla */
+      gl.uniform2f(uRes, w, h * 1.35);
+    }
+  }
+  function pintar(t) {
+    medir();
+    gl.uniform1f(uT, t);
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
+  }
+
+  var quieto = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (quieto) { pintar(12.0); window.addEventListener('resize', function () { pintar(12.0); }); return; }
+
+  var visible = true, animando = false, inicio = performance.now();
+  var ultimo = 0;
+  function cuadro(ahora) {
+    if (!visible) { animando = false; return; }
+    if (ahora - ultimo >= MIN_MS) {
+      ultimo = ahora;
+      pintar((ahora - inicio) / 1000 * VELOCIDAD);
+    }
+    requestAnimationFrame(cuadro);
+  }
+  function arrancar() { if (!animando) { animando = true; requestAnimationFrame(cuadro); } }
+
+  /* Se pausa cuando la pestaña no esta al frente */
+  document.addEventListener('visibilitychange', function () {
+    visible = !document.hidden;
+    if (visible) arrancar();
+  });
+  arrancar();
+
+  /* Textos segun idioma del visitante */
+  if ((navigator.language || 'en').toLowerCase().indexOf('es') === 0) {
+    document.getElementById('auroraClaim').textContent = 'El Salvador desde el aire';
+    document.getElementById('auroraSub').textContent =
+      'Vuelos privados en helicoptero · Operador certificado COA 007-TNA';
+  }
+})();
+</script>
+
+
+<script>
+/* Acordeon de tours: el elegido abre sus fotos en persianas, dentro de su propia fila.
+   Sin dependencias externas. */
+(function () {
+  var B = 'https://raw.githubusercontent.com/durias-emp/CNA-Booking-System/main/';
+  var TOURS = {
+    'San Salvador City': {
+      desc:   "A quick scenic flight over San Salvador's historic downtown and key areas for a unique view from above.",
+      descEs: 'Vuelo panoramico sobre el centro historico de San Salvador y los puntos clave de la ciudad.',
+      fotos: ['cna-ss-centro-atardecer.jpg','cna-ss-plaza-catedral.jpg','cna-card-san-salvador.jpg','cna-original-helipuerto-frente.jpg']
+    },
+    'Surf City': {
+      desc:   "A scenic tour flight along Surf City's coastline and iconic beaches for a unique view from above.",
+      descEs: 'Vuelo escenico sobre la costa de Surf City y sus playas mas conocidas.',
+      fotos: ['cna-card-surf-city.jpg','cna-picnic-playa.jpg','cna-vuelo-costa.jpg','cna-original-palmeras.jpg']
+    },
+    'Lake and Volcanoes': {
+      desc:   'Spectacular tour over volcanic landscapes and Lake Coatepeque in one unforgettable journey.',
+      descEs: 'Recorrido sobre el complejo volcanico y el lago de Coatepeque en un solo vuelo.',
+      fotos: ['cna-card-volcanes.jpg','cna-volcan-aereo.jpg','cna-original-resort.jpg','cna-vuelo-palmeras.jpg']
+    }
+  };
+  var ES = (navigator.language || 'en').toLowerCase().indexOf('es') === 0;
+  var CICLO = 3000;
+  var QUIETO = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var reloj = null;
+
+  function detener() { if (reloj) { clearInterval(reloj); reloj = null; } }
+
+  function construir(contenedor, urls, etiqueta) {
+    contenedor.innerHTML = '';
+    var fila = document.createElement('div'); fila.className = 'blinds';
+    var puntos = document.createElement('div'); puntos.className = 'blinds-dots';
+    var laminas = [], bolitas = [], activo = 0;
+
+    urls.forEach(function (u, i) {
+      var l = document.createElement('div');
+      l.className = 'blind' + (i === 0 ? ' active' : '');
+      l.setAttribute('role', 'button');
+      l.setAttribute('tabindex', '0');
+      l.setAttribute('aria-label', etiqueta + ' ' + (i + 1));
+      var img = document.createElement('img');
+      img.src = u; img.alt = ''; img.loading = 'lazy';
+      l.appendChild(img);
+      l.addEventListener('click', function (e) { e.stopPropagation(); activar(i, true); });
+      l.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); activar(i, true); }
+      });
+      fila.appendChild(l); laminas.push(l);
+      var p = document.createElement('span');
+      p.className = 'blinds-dot' + (i === 0 ? ' on' : '');
+      puntos.appendChild(p); bolitas.push(p);
+    });
+
+    function activar(i, manual) {
+      activo = i;
+      laminas.forEach(function (l, k) { l.classList.toggle('active', k === i); });
+      bolitas.forEach(function (p, k) { p.classList.toggle('on', k === i); });
+      if (manual) { detener(); arrancar(); }
+    }
+    function arrancar() {
+      if (QUIETO || urls.length < 2) return;
+      detener();
+      reloj = setInterval(function () { activar((activo + 1) % urls.length); }, CICLO);
+    }
+    fila.addEventListener('mouseenter', detener);
+    fila.addEventListener('mouseleave', arrancar);
+    contenedor.appendChild(fila);
+    contenedor.appendChild(puntos);
+    arrancar();
+  }
+
+  function sincronizar() {
+    var elegido = (document.getElementById('selectedTour') || {}).value || '';
+    detener();
+    document.querySelectorAll('.tour-panel').forEach(function (p) {
+      if (p.dataset.for === elegido) return;
+      p.classList.remove('open');
+      p.parentElement.classList.remove('abierto');
+      setTimeout(function () {
+        if (!p.classList.contains('open')) p.querySelector('.tour-panel-media').innerHTML = '';
+      }, 500);
+    });
+    if (!elegido) return;
+    var panel = document.querySelector('.tour-panel[data-for="' + elegido + '"]');
+    var t = TOURS[elegido];
+    if (!panel || !t) return;
+    panel.parentElement.classList.add('abierto');
+    construir(panel.querySelector('.tour-panel-media'),
+              t.fotos.map(function (n) { return B + n; }), elegido);
+    panel.querySelector('.tour-panel-desc').textContent = ES ? t.descEs : t.desc;
+    panel.classList.add('open');
+  }
+
+  /* los tours se ven desde el inicio: Tourist queda elegido por defecto */
+  (function porDefecto() {
+    var pastillas = document.querySelectorAll('.pill');
+    if (!pastillas.length || document.querySelector('.pill.active')) return;
+    var turista = pastillas[0];
+    turista.classList.add('active');
+    var radio = turista.querySelector('input');
+    if (radio) radio.checked = true;
+    var lista = document.getElementById('tourDropdown');
+    if (lista) lista.classList.add('open');
+  })();
+
+  document.querySelectorAll('.tour-card').forEach(function (b) {
+    b.addEventListener('click', function () { setTimeout(sincronizar, 0); });
+  });
+  document.querySelectorAll('.pill').forEach(function (p) {
+    p.addEventListener('click', function () { setTimeout(sincronizar, 0); });
+  });
+  document.addEventListener('visibilitychange', function () { if (document.hidden) detener(); });
+})();
 </script>
 
 </body>
