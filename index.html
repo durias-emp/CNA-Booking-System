@@ -1315,7 +1315,7 @@
 
   /* PERSIANAS: las fotos del tour como laminas que se abren */
   .blinds {
-    display: flex; gap: 12px; height: 300px;
+    display: flex; gap: 12px; height: 254px;
     touch-action: pan-y;
   }
   .blind {
@@ -1328,22 +1328,29 @@
     transition: flex-grow 1s cubic-bezier(.22,1,.36,1),
                 filter .9s cubic-bezier(.22,1,.36,1);
   }
-  .blind img {
-    position: absolute; inset: 0; width: 100%; height: 100%;
-    object-fit: cover; display: block;
+  .blind img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  /* el velo: la misma foto, desenfocada, solo para rellenar los costados */
+  .blind-velo {
+    object-fit: cover;
+    filter: blur(24px) brightness(.5) saturate(1.2);
+    transform: scale(1.18);
+    opacity: 0; transition: opacity .6s ease;
+  }
+  .blind.active .blind-velo { opacity: 1; }
+  /* la foto cerrada recorta, la foto abierta se ve entera */
+  .blind-foto {
+    object-fit: cover;
     filter: brightness(.55) saturate(1.05);
-    transform: scale(1.08);
-    transition: filter 1s cubic-bezier(.22,1,.36,1),
-                transform 1.6s cubic-bezier(.22,1,.36,1);
+    transition: filter 1s cubic-bezier(.22,1,.36,1);
   }
   .blind.active { flex-grow: 9; }
-  .blind.active img { filter: none; transform: scale(1); }
+  .blind.active .blind-foto { object-fit: contain; filter: none; }
   .blind::after {
     content: ''; position: absolute; inset: 0;
     background: linear-gradient(0deg, rgba(5,16,31,0.55) 0%, rgba(5,16,31,0) 45%);
     opacity: .9; transition: opacity .4s ease; pointer-events: none;
   }
-  .blind.active::after { opacity: .55; }
+  .blind.active::after { opacity: .22; }
   .blinds-dots { display: flex; gap: 6px; justify-content: center; margin-top: 10px; }
   .blinds-dot {
     width: 5px; height: 5px; border-radius: 50%;
@@ -1351,7 +1358,7 @@
   }
   .blinds-dot.on { background: #7dd3fc; width: 16px; border-radius: 3px; }
   @media (max-width: 768px) {
-    .blinds { height: 230px; gap: 7px; }
+    .blinds { height: 182px; gap: 7px; }
     /* en el telefono las cerradas se hacen mucho mas angostas: la abierta manda */
     .blind { border-radius: 16px; min-width: 18px; }
     .blind.active { flex-grow: 13; }
@@ -2966,9 +2973,12 @@
       l.setAttribute('role', 'button');
       l.setAttribute('tabindex', '0');
       l.setAttribute('aria-label', etiqueta + ' ' + (i + 1));
+      var velo = document.createElement('img');
+      velo.className = 'blind-velo'; velo.src = u; velo.alt = '';
+      velo.setAttribute('aria-hidden', 'true'); velo.loading = 'lazy';
       var img = document.createElement('img');
-      img.src = u; img.alt = ''; img.loading = 'lazy';
-      l.appendChild(img);
+      img.className = 'blind-foto'; img.src = u; img.alt = ''; img.loading = 'lazy';
+      l.appendChild(velo); l.appendChild(img);
       l.addEventListener('click', function (e) { e.stopPropagation(); activar(i, true); });
       l.addEventListener('keydown', function (e) {
         if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); activar(i, true); }
