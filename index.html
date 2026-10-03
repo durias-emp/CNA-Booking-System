@@ -1409,15 +1409,46 @@
   }
   /* el gesto de quedarse con la experiencia, antes de bajar a la fecha */
   .tour-cta {
-    margin: 12px 4px 4px; width: calc(100% - 8px);
+    position: relative; overflow: hidden;
+    margin: 12px 4px 4px; width: calc(100% - 8px); min-height: 42px;
     padding: 11px 16px; border: 0; border-radius: 12px;
     background: #ffffff; color: #0b1220;
     font-family: inherit; font-size: 13px; font-weight: 600; letter-spacing: .1px;
     cursor: pointer;
-    transition: background .15s ease, transform .15s ease;
+    transition: background .25s ease, transform .15s ease, color .25s ease;
   }
   .tour-cta:hover { background: #e8f4ff; transform: translateY(-1px); }
   .tour-cta:active { transform: none; }
+  /* las dos caras viven una sobre otra: la invitacion sale, la confirmacion entra */
+  .cta-cara {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    transition: opacity .25s ease, transform .35s cubic-bezier(.22,1,.36,1);
+  }
+  .cta-listo {
+    position: absolute; inset: 0;
+    opacity: 0; transform: translateY(10px);
+  }
+  .cta-listo svg { width: 17px; height: 17px; flex-shrink: 0; }
+  .cta-listo svg path { stroke-dasharray: 26; stroke-dashoffset: 26; }
+  .tour-cta.listo { background: #0b1220; color: #ffffff; cursor: default; }
+  .tour-cta.listo:hover { background: #0b1220; transform: none; }
+  .tour-cta.listo .cta-invita { opacity: 0; transform: translateY(-10px); }
+  .tour-cta.listo .cta-listo { opacity: 1; transform: none; }
+  /* la palomita se dibuja sola, no aparece de golpe */
+  .tour-cta.listo .cta-listo svg path { animation: trazoPalomita .5s .12s ease forwards; }
+  @keyframes trazoPalomita { to { stroke-dashoffset: 0; } }
+  /* la tarjeta entera acusa recibo con un halo corto */
+  .tour-item.confirmada { animation: haloTarjeta 1s ease; }
+  @keyframes haloTarjeta {
+    0%   { box-shadow: 0 0 0 0 rgba(56,189,248,0); }
+    25%  { box-shadow: 0 0 0 4px rgba(56,189,248,0.38); }
+    100% { box-shadow: 0 0 0 14px rgba(56,189,248,0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cta-cara { transition: none; }
+    .tour-cta.listo .cta-listo svg path { animation: none; stroke-dashoffset: 0; }
+    .tour-item.confirmada { animation: none; }
+  }
   .latiendo { animation: latido 1.3s ease; }
   @keyframes latido {
     0%, 100% { box-shadow: 0 0 0 0 rgba(56,189,248,0); }
@@ -1471,6 +1502,7 @@
 (function () {
   var D = {
     ctaElegir:     ['Elegir esta experiencia \u2192', 'Choose this experience \u2192'],
+    ctaListo:      ['Experiencia elegida', 'Experience selected'],
     anuncio1:      ['Reserve ahora y aproveche las tarifas especiales de fin de a\u00f1o',
                     'Book now and get our special end of year rates'],
     titulo:        ['Reserve su vuelo \u00b7 Cielo Norte Aviaci\u00f3n', 'Book a Flight \u00b7 Cielo Norte Aviaci\u00f3n'],
@@ -1757,7 +1789,7 @@
               <div class="tour-panel" data-for="San Salvador City">
                 <div class="tour-panel-media"></div>
                 <div class="tour-panel-desc"></div>
-                <button type="button" class="tour-cta" data-t="ctaElegir" onclick="elegirExperiencia(event)">Choose this experience</button>
+                <button type="button" class="tour-cta" onclick="elegirExperiencia(event)"><span class="cta-cara cta-invita" data-t="ctaElegir">Choose this experience</span><span class="cta-cara cta-listo"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12.6l4.4 4.4L19 7.2" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-t="ctaListo">Experience selected</span></span></button>
               </div>
             </div>
             <div class="tour-item">
@@ -1769,7 +1801,7 @@
               <div class="tour-panel" data-for="Surf City">
                 <div class="tour-panel-media"></div>
                 <div class="tour-panel-desc"></div>
-                <button type="button" class="tour-cta" data-t="ctaElegir" onclick="elegirExperiencia(event)">Choose this experience</button>
+                <button type="button" class="tour-cta" onclick="elegirExperiencia(event)"><span class="cta-cara cta-invita" data-t="ctaElegir">Choose this experience</span><span class="cta-cara cta-listo"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12.6l4.4 4.4L19 7.2" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-t="ctaListo">Experience selected</span></span></button>
               </div>
             </div>
             <div class="tour-item">
@@ -1781,7 +1813,7 @@
               <div class="tour-panel" data-for="Tour Gran El Salvador">
                 <div class="tour-panel-media"></div>
                 <div class="tour-panel-desc"></div>
-                <button type="button" class="tour-cta" data-t="ctaElegir" onclick="elegirExperiencia(event)">Choose this experience</button>
+                <button type="button" class="tour-cta" onclick="elegirExperiencia(event)"><span class="cta-cara cta-invita" data-t="ctaElegir">Choose this experience</span><span class="cta-cara cta-listo"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12.6l4.4 4.4L19 7.2" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-t="ctaListo">Experience selected</span></span></button>
               </div>
             </div>
           </div>
@@ -2259,13 +2291,39 @@
   /* el boton del tour: ya quedo elegido al abrirlo, aqui lo llevamos a la fecha */
   function elegirExperiencia(ev) {
     if (ev) ev.stopPropagation();
-    var boton = document.getElementById('datepickerBtn');
-    if (!boton) return;
-    boton.scrollIntoView({ block: 'center', behavior: 'smooth' });
-    boton.classList.remove('latiendo');
-    void boton.offsetWidth;
-    boton.classList.add('latiendo');
-    setTimeout(function () { boton.classList.remove('latiendo'); }, 1500);
+    var cta = ev && ev.currentTarget;
+
+    /* 1. el boton confirma en el acto: cambia de cara y dibuja la palomita */
+    if (cta) {
+      /* el tour del panel es el que queda escrito, pase lo que pase */
+      var suPanel = cta.closest('.tour-panel');
+      var campo = document.getElementById('selectedTour');
+      if (suPanel && campo && suPanel.dataset.for && campo.value !== suPanel.dataset.for) {
+        campo.value = suPanel.dataset.for;
+      }
+      document.querySelectorAll('.tour-cta').forEach(function (b) {
+        if (b !== cta) b.classList.remove('listo');
+      });
+      cta.classList.add('listo');
+      var tarjeta = cta.closest('.tour-item');
+      if (tarjeta) {
+        tarjeta.classList.remove('confirmada');
+        void tarjeta.offsetWidth;
+        tarjeta.classList.add('confirmada');
+        setTimeout(function () { tarjeta.classList.remove('confirmada'); }, 1100);
+      }
+    }
+
+    /* 2. recien despues lo llevamos a la fecha, para que alcance a ver la respuesta */
+    setTimeout(function () {
+      var boton = document.getElementById('datepickerBtn');
+      if (!boton) return;
+      boton.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      boton.classList.remove('latiendo');
+      void boton.offsetWidth;
+      boton.classList.add('latiendo');
+      setTimeout(function () { boton.classList.remove('latiendo'); }, 1500);
+    }, 520);
   }
 
   function pickFromAvail(value) {
@@ -2949,6 +3007,11 @@
       setTimeout(function () {
         if (!p.classList.contains('open')) p.querySelector('.tour-panel-media').innerHTML = '';
       }, 500);
+    });
+    /* el que ya no esta elegido deja de decir que lo esta */
+    document.querySelectorAll('.tour-cta').forEach(function (b) {
+      var panel = b.closest('.tour-panel');
+      if (!panel || panel.dataset.for !== elegido) b.classList.remove('listo');
     });
     if (!elegido) return;
     var panel = document.querySelector('.tour-panel[data-for="' + elegido + '"]');
