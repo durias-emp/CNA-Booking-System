@@ -614,16 +614,55 @@
     color: rgba(255,255,255,0.7);
   }
 
-  /* ── FOOTER ── */
+  /* ── FOOTER: mismas tres columnas del sitio, con el vidrio de esta pagina ── */
   footer {
     position: relative; z-index: 10;
-    border-top: 1px solid rgba(255,255,255,0.2);
-    padding: 32px 48px;
-    display: flex; align-items: center; justify-content: space-between;
-    font-size: 12px; color: rgba(255,255,255,0.75);
+    border-top: 1px solid rgba(255,255,255,0.18);
+    padding: 36px 48px 26px;
+    font-size: 12px; color: rgba(255,255,255,0.72);
   }
   footer a { color: #ffffff; text-decoration: none; font-weight: 500; }
   footer a:hover { color: #e0f4ff; }
+
+  .pie-cols {
+    display: grid; grid-template-columns: 1.1fr 1fr 1fr;
+    gap: 32px; padding-bottom: 26px;
+  }
+  .pie-col { display: flex; flex-direction: column; align-items: flex-start; gap: 9px; }
+  .pie-titulo {
+    margin: 0 0 3px; font-size: 10px; font-weight: 600;
+    letter-spacing: 1.8px; text-transform: uppercase;
+    color: rgba(255,255,255,0.46);
+  }
+  .pie-linea { margin: 0; line-height: 1.6; }
+  .pie-linea span { color: rgba(255,255,255,0.55); }
+  .pie-enlace {
+    font-size: 11.5px; letter-spacing: 0.8px; text-transform: uppercase;
+    color: rgba(255,255,255,0.74) !important;
+  }
+  .pie-enlace:hover { color: #ffffff !important; }
+  .pie-redes { display: flex; gap: 10px; margin-top: 2px; }
+  .pie-icono {
+    width: 38px; height: 38px; border-radius: 999px;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(255,255,255,0.10);
+    border: 1px solid rgba(255,255,255,0.18);
+    transition: background .15s ease, border-color .15s ease, transform .15s ease;
+  }
+  .pie-icono:hover {
+    background: rgba(255,255,255,0.20);
+    border-color: rgba(255,255,255,0.32);
+    transform: translateY(-1px);
+  }
+  .pie-icono svg { width: 17px; height: 17px; fill: #ffffff; display: block; }
+  .pie-abajo {
+    border-top: 1px solid rgba(255,255,255,0.12);
+    padding-top: 16px;
+    display: flex; align-items: center; justify-content: space-between; gap: 18px;
+    font-size: 11.5px; color: rgba(255,255,255,0.58);
+  }
+  .pie-abajo p { margin: 0; }
+  .pie-abajo b { color: rgba(255,255,255,0.78); font-weight: 600; }
 
 
   /* AURORA: banda inferior */
@@ -890,7 +929,9 @@
     .main { grid-template-columns: 1fr; padding: 0 24px 64px; gap: 28px; }
     .divider { padding: 0 24px; }
     .form-row { grid-template-columns: 1fr; }
-    footer { flex-direction: column; gap: 12px; text-align: center; }
+    footer { padding: 32px 24px 22px; }
+    .pie-cols { grid-template-columns: 1fr; gap: 24px; }
+    .pie-abajo { flex-direction: column; align-items: flex-start; gap: 10px; }
   }
 
   /* ─────────────────────────────────────────────
@@ -1528,8 +1569,16 @@
     auroraClaim:   ['El Salvador desde el aire', 'El Salvador from above'],
     auroraSub:     ['Vuelos privados en helic\u00f3ptero \u00b7 Operador certificado COA 007-TNA',
                     'Private helicopter flights \u00b7 Certified operator COA 007-TNA'],
-    pieDudas:      ['\u00bfDudas? <a href="https://wa.me/50377458200">Escr\u00edbanos por WhatsApp</a> \u00b7 <a href="mailto:info@cielonorteaviacion.com">info@cielonorteaviacion.com</a>',
-                    'Questions? <a href="https://wa.me/50377458200">WhatsApp us</a> \u00b7 <a href="mailto:info@cielonorteaviacion.com">info@cielonorteaviacion.com</a>']
+    pieRedes:      ['Nuestras redes', 'Our socials'],
+    pieContacto:   ['Contacto', 'Contact'],
+    pieCorreoEt:   ['Correo electr\u00f3nico', 'Email'],
+    pieIr:         ['Ir a', 'Go to'],
+    pieInicio:     ['Inicio', 'Home'],
+    pieNosotros:   ['Qui\u00e9nes somos', 'About us'],
+    pieServicios:  ['Servicios', 'Services'],
+    pieContactoEnlace: ['Contacto', 'Contact'],
+    pieSede:       ['<b>Sede operativa:</b> San Salvador, El Salvador. Complejo Corporativo Salamanca, calle a Huiz\u00facar, kil\u00f3metro y medio',
+                    '<b>Operational base:</b> San Salvador, El Salvador. Complejo Corporativo Salamanca, calle a Huiz\u00facar, kil\u00f3metro y medio']
   };
 
   var MESES = {
@@ -1874,8 +1923,37 @@
     <p class="aurora-claim" id="auroraClaim" data-t="auroraClaim">El Salvador from above</p>
     <p class="aurora-sub" id="auroraSub" data-t="auroraSub">Private helicopter flights · Certified operator COA 007-TNA</p>
     <footer>
-      <div>© 2026 Cielo Norte Aviación · COA No. 007-TNA · <a href="https://www.cielonorteaviacion.com">cielonorteaviacion.com</a></div>
-      <div data-t="pieDudas" data-html="1">Questions? <a href="https://wa.me/50377458200">WhatsApp us</a> · <a href="mailto:info@cielonorteaviacion.com">info@cielonorteaviacion.com</a></div>
+      <div class="pie-cols">
+
+        <div class="pie-col">
+          <p class="pie-titulo" data-t="pieRedes">Our socials</p>
+          <div class="pie-redes">
+            <a class="pie-icono" href="https://wa.me/50377458200" target="_blank" rel="noopener" aria-label="WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.16-.17.2-.35.22-.64.08-.3-.15-1.26-.46-2.39-1.48-.88-.79-1.48-1.76-1.65-2.06-.18-.3-.02-.46.13-.6.13-.14.3-.35.45-.52.15-.18.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.61-.91-2.21-.24-.58-.49-.5-.67-.51l-.57-.01c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.87 1.21 3.07c.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.69.62.71.23 1.36.2 1.87.12.57-.09 1.76-.72 2.01-1.41.25-.7.25-1.29.17-1.42-.07-.12-.27-.2-.57-.35M12.05 21.8h-.01c-1.77 0-3.5-.48-5.03-1.38l-.36-.22-3.74.98 1-3.65-.24-.37a9.86 9.86 0 0 1-1.51-5.26c0-5.45 4.44-9.89 9.89-9.89 2.64 0 5.12 1.03 6.99 2.9a9.82 9.82 0 0 1 2.89 6.99c0 5.45-4.43 9.89-9.88 9.89M20.52 3.45A11.9 11.9 0 0 0 12.05 0C5.46 0 .1 5.36.1 11.94c0 2.1.55 4.14 1.6 5.95L0 24l6.3-1.65a11.9 11.9 0 0 0 5.69 1.45h.01c6.58 0 11.94-5.36 11.95-11.95a11.87 11.87 0 0 0-3.5-8.41"/></svg></a>
+            <a class="pie-icono" href="https://www.instagram.com/cielonorteaviacion" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 3.25.15 4.77 1.69 4.92 4.92.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.15 3.23-1.66 4.77-4.92 4.92-1.27.06-1.64.07-4.85.07s-3.58-.01-4.85-.07c-3.26-.15-4.77-1.7-4.92-4.92C2.17 15.58 2.16 15.2 2.16 12s.01-3.58.07-4.85c.15-3.23 1.66-4.77 4.92-4.92C8.42 2.17 8.8 2.16 12 2.16M12 0C8.74 0 8.33.01 7.05.07 2.7.27.28 2.69.07 7.05.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.2 4.36 2.62 6.78 6.98 6.98C8.33 23.99 8.74 24 12 24s3.67-.01 4.95-.07c4.35-.2 6.78-2.62 6.98-6.98.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.2-4.35-2.62-6.78-6.98-6.98C15.67.01 15.26 0 12 0m0 5.84a6.16 6.16 0 1 0 0 12.32 6.16 6.16 0 0 0 0-12.32M12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8m6.41-11.85a1.44 1.44 0 1 0 0 2.89 1.44 1.44 0 0 0 0-2.89"/></svg></a>
+            <a class="pie-icono" href="https://www.facebook.com/profile.php?id=61583807253311" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M24 12.07C24 5.44 18.63.07 12 .07S0 5.44 0 12.07c0 5.99 4.39 10.95 10.13 11.85v-8.38H7.08v-3.47h3.05V9.43c0-3.01 1.79-4.67 4.53-4.67 1.31 0 2.69.24 2.69.24v2.95h-1.52c-1.49 0-1.95.93-1.95 1.87v2.25h3.33l-.54 3.47h-2.8v8.38C19.61 23.03 24 18.06 24 12.07"/></svg></a>
+          </div>
+        </div>
+
+        <div class="pie-col">
+          <p class="pie-titulo" data-t="pieContacto">Contact</p>
+          <p class="pie-linea"><span data-t="pieCorreoEt">Email</span><br><a href="mailto:info@cielonorteaviacion.com">info@cielonorteaviacion.com</a></p>
+          <p class="pie-linea"><span>WhatsApp</span><br><a href="https://wa.me/50377458200">wa.me/50377458200</a></p>
+        </div>
+
+        <div class="pie-col">
+          <p class="pie-titulo" data-t="pieIr">Go to</p>
+          <a class="pie-enlace" data-t="pieInicio" href="https://www.cielonorteaviacion.com/landing-page">Home</a>
+          <a class="pie-enlace" data-t="pieNosotros" href="https://www.cielonorteaviacion.com/team">About us</a>
+          <a class="pie-enlace" data-t="pieServicios" href="https://www.cielonorteaviacion.com/services">Services</a>
+          <a class="pie-enlace" data-t="pieContactoEnlace" href="https://www.cielonorteaviacion.com/contact">Contact</a>
+        </div>
+
+      </div>
+
+      <div class="pie-abajo">
+        <p data-t="pieSede" data-html="1"><b>Operational base:</b> San Salvador, El Salvador. Complejo Corporativo Salamanca, calle a Huizúcar, kilómetro y medio</p>
+        <p>© 2026 Cielo Norte Aviación · COA No. 007-TNA · <a href="https://www.cielonorteaviacion.com">cielonorteaviacion.com</a></p>
+      </div>
     </footer>
   </div>
 </section>
