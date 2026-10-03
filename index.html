@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0aa0e8">
-<title>Book a Flight · Cielo Norte Aviación</title>
+<title data-t="titulo">Book a Flight · Cielo Norte Aviación</title>
 <link rel="icon" href="favicon.png?v=2" type="image/png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,700&family=Poppins:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
@@ -957,17 +957,78 @@
   .dp-day.dp-other, .dp-day.dp-disabled { color: rgba(255,255,255,0.25) !important; }
   .avail-date-label { color: var(--ink) !important; }
 
-  /* telefono y autocompletado */
-  .iti__country-list, .pac-container {
-    background: rgba(12,22,38,0.95) !important;
+  /* telefono y autocompletado: la lista de paises en el mismo vidrio que el resto.
+     Ojo: el que hace scroll es .iti__dropdown-content, asi que la superficie
+     (fondo, borde, esquinas y sombra) va ahi y la lista queda transparente. */
+  .iti__dropdown-content, .pac-container {
+    background: rgba(12,22,38,0.82) !important;
+    -webkit-backdrop-filter: blur(16px);
+            backdrop-filter: blur(16px);
     border: 1px solid var(--glass-line) !important;
+    border-radius: 14px !important;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.5) !important;
+    color: var(--ink) !important;
+    padding: 6px !important;
+    max-height: 274px !important;
+    overscroll-behavior: contain;
+  }
+  .iti__country-list {
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    max-height: none !important;
     color: var(--ink) !important;
   }
-  .iti__country:hover, .pac-item:hover, .pac-item-selected {
-    background: rgba(255,255,255,0.12) !important;
+  .iti__country {
+    padding: 9px 12px !important;
+    border-radius: 10px !important;
+    font-size: 13.5px;
+    outline: none !important;
   }
+  /* la fila activa ya no se pone blanca: usa el mismo realce del resto */
+  .iti__country:hover,
+  .iti__country.iti__highlight,
+  .pac-item:hover, .pac-item-selected {
+    background: rgba(255,255,255,0.14) !important;
+    color: var(--ink) !important;
+  }
+  .iti__country-name { color: var(--ink) !important; }
+  .iti__dial-code { color: var(--ink-mute) !important; }
   .pac-item, .pac-item-query { color: var(--ink) !important; }
-  .iti__divider { border-color: var(--glass-line) !important; }
+  .pac-item { border-top: 0 !important; border-radius: 10px !important; padding: 7px 10px !important; }
+  .iti__divider {
+    border-color: var(--glass-line) !important;
+    margin: 6px 4px !important;
+  }
+  .iti__search-input {
+    background: transparent !important;
+    color: var(--ink) !important;
+    border: 0 !important;
+    border-bottom: 1px solid var(--glass-line) !important;
+  }
+  .iti__search-input::placeholder { color: var(--ink-mute) !important; }
+  /* barra de desplazamiento discreta, sin el gris del navegador */
+  .iti__dropdown-content::-webkit-scrollbar, .pac-container::-webkit-scrollbar { width: 9px; }
+  .iti__dropdown-content::-webkit-scrollbar-track, .pac-container::-webkit-scrollbar-track { background: transparent; }
+  .iti__dropdown-content::-webkit-scrollbar-thumb, .pac-container::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.20);
+    border-radius: 999px;
+    border: 3px solid transparent;
+    background-clip: padding-box;
+  }
+  .iti__dropdown-content::-webkit-scrollbar-thumb:hover, .pac-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(255,255,255,0.34);
+    background-clip: padding-box;
+  }
+  /* bandera, prefijo y flecha dentro del campo */
+  .iti--separate-dial-code .iti__selected-flag { background: transparent !important; }
+  .iti__selected-flag { border-radius: 12px 0 0 12px !important; }
+  .iti__selected-flag:hover, .iti__selected-flag:focus { background: rgba(255,255,255,0.10) !important; }
+  .iti__selected-dial-code { color: var(--ink) !important; }
+  .iti__arrow { border-top-color: var(--ink-mute) !important; }
+  .iti__arrow--up { border-bottom-color: var(--ink-mute) !important; }
 
   /* boton principal: solido y claro, el unico elemento opaco */
   .submit-btn {
@@ -1311,6 +1372,181 @@
   .tour-panel-desc { padding: 12px 6px 0 !important; }
 
 </style>
+<script>
+/* ── Idioma del visitante ──────────────────────────────────────────────
+   La pagina se muestra en espanol o en ingles segun el navegador de quien
+   la abre. Manda ?lang=es o ?lang=en, luego lo que haya elegido antes y al
+   final el idioma del navegador. Todo texto fijo lleva data-t y los demas
+   modulos piden sus frases con CNAIdioma.t(clave).                      */
+(function () {
+  var D = {
+    titulo:        ['Reserve su vuelo \u00b7 Cielo Norte Aviaci\u00f3n', 'Book a Flight \u00b7 Cielo Norte Aviaci\u00f3n'],
+    heroTag:       ['Solicitud de reserva', 'Flight Booking Request'],
+    heroH1:        ['Reserve su<br><em>vuelo privado</em>', 'Reserve Your<br><em>Private Flight</em>'],
+    heroP:         ['Vea las fechas disponibles en el calendario, complete sus datos y le confirmamos su reserva en una hora.',
+                    "Check available dates on the calendar, fill in your details, and we'll confirm your booking within one hour."],
+    pasos:         ['Paso 1: vea la disponibilidad \u00b7 Paso 2: env\u00ede su solicitud',
+                    'Step 1: Check availability \u00b7 Step 2: Submit your request'],
+
+    formTitulo:    ['Solicitud de vuelo', 'Flight Request'],
+    formSub:       ['Complete sus datos y le confirmamos en una hora.', "Fill in your details and we'll confirm within one hour."],
+    exitoTitulo:   ['Solicitud recibida', 'Request Received!'],
+    exitoTexto:    ['Gracias por su solicitud. Nuestro equipo lo contacta en una hora para confirmar los detalles de su vuelo.',
+                    'Thank you for your booking request. Our team will contact you within one hour to confirm your flight details.'],
+    exitoDudas:    ['\u00bfDudas? <a href="https://wa.me/50377458200" style="color:#0f172a;font-weight:600;">Escr\u00edbanos por WhatsApp \u2192</a>',
+                    'Questions? <a href="https://wa.me/50377458200" style="color:#0f172a;font-weight:600;">WhatsApp us \u2192</a>'],
+
+    lblNombre:     ['Nombre completo', 'Full Name'],
+    phNombre:      ['Su nombre completo', 'Your full name'],
+    lblWhats:      ['WhatsApp', 'WhatsApp'],
+    lblCorreo:     ['Correo electr\u00f3nico', 'Email Address'],
+    lblTipo:       ['Tipo de vuelo', 'Type of Flight'],
+    pillTurista:   ['Tur\u00edstico', 'Tourist'],
+    pillEjecutivo: ['Ejecutivo', 'Executive'],
+    lblRecorrido:  ['Elija su recorrido', 'Select your tour'],
+    tourLago:      ['Lago y volcanes', 'Lake and Volcanoes'],
+    dur20:         ['20 min', '20 min'],
+    dur30:         ['30 min', '30 min'],
+    dur60:         ['1 hora', '1 hour'],
+
+    lblViaje:      ['Tipo de viaje', 'Trip type'],
+    btnIda:        ['\u2708 Solo ida', '\u2708 One Way'],
+    btnIdaVuelta:  ['\u21c4 Ida y vuelta', '\u21c4 Round Trip'],
+    lblDesde:      ['Desde', 'From'],
+    phOrigen:      ['Escriba aeropuerto o helipuerto\u2026', 'Type airport or heliport\u2026'],
+    lblDestino:    ['Destino', 'Destination'],
+    phDestino:     ['Busque ciudad, direcci\u00f3n o lugar\u2026', 'Search city, address or landmark\u2026'],
+
+    lblFecha:      ['Fecha', 'Date'],
+    elijaFecha:    ['Elija una fecha', 'Select a date'],
+    lblHora:       ['Hora', 'Time'],
+    horaBloqueada: ['Elija primero una fecha', 'Select a date first'],
+    lblPasajeros:  ['N\u00famero de pasajeros', 'Number of Passengers'],
+    opElija:       ['Elija', 'Select'],
+    phOpcional:    ['Opcional', 'Optional'],
+    btnEnviar:     ['Enviar solicitud \u2192', 'Send Flight Request \u2192'],
+    aviso:         ['Al enviar acepta que nuestro equipo lo contacte por WhatsApp o correo. En esta etapa no se requiere ning\u00fan pago.',
+                    'By submitting you agree to be contacted by our team via WhatsApp or email. No payment required at this stage.'],
+
+    dispTitulo:    ['Disponibilidad de vuelos', 'Flight Availability'],
+    dispSub:       ['Elija una fecha para ver las horas libres', 'Select a date to see open time slots'],
+    dispSubElegida:['Horas libres del d\u00eda que eligi\u00f3', 'Open time slots for the date you picked'],
+    resumenTitulo: ['Resumen de la reserva', 'Booking Summary'],
+    resumenSub:    ['Este es el resumen de su solicitud', "Here's a recap of your request"],
+    resumenPie:    ['Le escribimos por WhatsApp o correo en una hora.', "We'll reach out via WhatsApp or email within one hour."],
+    vacioTexto:    ['Elija una fecha a la izquierda y le mostramos las horas libres de ese d\u00eda.',
+                    "Pick a date on the left and we'll show you what's available that day."],
+    sugProximas:   ['Horas libres m\u00e1s pr\u00f3ximas', 'Soonest openings'],
+    sugSugeridas:  ['Horarios sugeridos', 'Suggested times'],
+    sugPie:        ['Toque una para empezar, o elija otra fecha a la izquierda.', 'Tap one to start, or pick any other date on the left.'],
+    sugDeFondo:    [', o elija su propia fecha', ', or pick your own date'],
+    consultando:   ['Consultando disponibilidad\u2026', 'Checking availability\u2026'],
+    cargando:      ['Cargando disponibilidad\u2026', 'Loading availability\u2026'],
+    badgeLibre:    ['Libre', 'Open'],
+    badgeOcupado:  ['Reservado', 'Booked'],
+    leyendaLibre:  ['<i style="background:rgba(56,189,248,0.35); border:1px solid rgba(56,189,248,0.6);"></i> Libre',
+                    '<i style="background:rgba(56,189,248,0.35); border:1px solid rgba(56,189,248,0.6);"></i> Available'],
+    leyendaOcupada:['<i style="background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.28);"></i> Reservado',
+                    '<i style="background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.28);"></i> Booked'],
+
+    razon08:       ['El aire m\u00e1s calmado del d\u00eda', 'Calmest air of the day'],
+    razon09:       ['Cielo limpio, las mejores fotos', 'Clear skies, sharpest photos'],
+    razon10:       ['Luz pareja sobre el volc\u00e1n', 'Even light over the volcano'],
+    razon11:       ['Vista amplia de la costa', 'Wide view of the coastline'],
+    razon12:       ['El mar en su azul m\u00e1s fuerte', 'Turquoise water at its brightest'],
+    razon13:       ['Salida c\u00f3moda de medio d\u00eda', 'Easy midday departure'],
+    razon14:       ['Color intenso sobre el lago', 'Strong colour over the lake'],
+    razon15:       ['Justo antes de la hora dorada', 'Right before golden hour'],
+    razon16:       ['Hora dorada sobre el Pac\u00edfico', 'Golden hour over the Pacific'],
+    razon17:       ['Atardecer desde el aire', 'Sunset from the air'],
+
+    enviando:      ['Enviando\u2026', 'Sending\u2026'],
+    errorEnvio:    ['Algo fall\u00f3 al enviar su solicitud. Escr\u00edbanos por WhatsApp al +503 7745 8200 o intente de nuevo.',
+                    'Something went wrong sending your request. Please WhatsApp us at +503 7745 8200 or try again.'],
+    rNombre:       ['Nombre', 'Name'],
+    rCorreo:       ['Correo', 'Email'],
+    rTipo:         ['Tipo de vuelo', 'Flight Type'],
+    rTour:         ['Recorrido', 'Tour'],
+    rViaje:        ['Tipo de viaje', 'Trip Type'],
+    rDesde:        ['Desde', 'From'],
+    rHacia:        ['Hacia', 'To'],
+    rFecha:        ['Fecha', 'Date'],
+    rHora:         ['Hora', 'Time'],
+    rPasajeros:    ['Pasajeros', 'Passengers'],
+    rSinElegir:    ['Sin elegir', 'Not selected'],
+    rSinEspecificar:['Sin especificar', 'Not specified'],
+
+    refEtiqueta:   ['C\u00f3digo de creador de contenido', 'Content creator code'],
+    refValido:     ['C\u00f3digo aplicado: ', 'Code applied: '],
+    refInvalido:   ['Ese c\u00f3digo no est\u00e1 disponible. Su reserva contin\u00faa normalmente.',
+                    'That code is not available. Your booking continues normally.'],
+    refResumen:    ['C\u00f3digo', 'Code'],
+
+    auroraClaim:   ['El Salvador desde el aire', 'El Salvador from above'],
+    auroraSub:     ['Vuelos privados en helic\u00f3ptero \u00b7 Operador certificado COA 007-TNA',
+                    'Private helicopter flights \u00b7 Certified operator COA 007-TNA'],
+    pieDudas:      ['\u00bfDudas? <a href="https://wa.me/50377458200">Escr\u00edbanos por WhatsApp</a> \u00b7 <a href="mailto:info@cielonorteaviacion.com">info@cielonorteaviacion.com</a>',
+                    'Questions? <a href="https://wa.me/50377458200">WhatsApp us</a> \u00b7 <a href="mailto:info@cielonorteaviacion.com">info@cielonorteaviacion.com</a>']
+  };
+
+  var MESES = {
+    es: ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],
+    en: ['January','February','March','April','May','June','July','August','September','October','November','December']
+  };
+  var DIAS = {
+    es: ['Do','Lu','Ma','Mi','Ju','Vi','Sa'],
+    en: ['Su','Mo','Tu','We','Th','Fr','Sa']
+  };
+
+  var pedido = (new URLSearchParams(location.search).get('lang') || '').toLowerCase();
+  var guardado = '';
+  try { guardado = localStorage.getItem('cna_lang') || ''; } catch (e) {}
+  var nav = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
+  var codigo = (pedido === 'es' || pedido === 'en') ? pedido
+             : (guardado === 'es' || guardado === 'en') ? guardado
+             : (nav.indexOf('es') === 0 ? 'es' : 'en');
+  if (pedido === 'es' || pedido === 'en') { try { localStorage.setItem('cna_lang', codigo); } catch (e) {} }
+  var ES = codigo === 'es';
+
+  function t(clave) { var e = D[clave]; return e ? (ES ? e[0] : e[1]) : ''; }
+
+  window.CNAIdioma = {
+    es: ES,
+    codigo: codigo,
+    local: ES ? 'es-SV' : 'en-US',
+    t: t,
+    meses: MESES[codigo],
+    diasCortos: DIAS[codigo],
+    /* fechas en el idioma del visitante, con la primera letra en mayuscula */
+    fecha: function (d, estilo) {
+      var o = estilo === 'corta' ? { weekday: 'short', month: 'short', day: 'numeric' }
+            : estilo === 'media' ? { month: 'long', day: 'numeric', year: 'numeric' }
+            : { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' };
+      var f = d.toLocaleDateString(ES ? 'es-SV' : 'en-US', o).replace(/\./g, '');
+      return f.charAt(0).toUpperCase() + f.slice(1);
+    }
+  };
+
+  function aplicar() {
+    document.documentElement.lang = codigo;
+    document.querySelectorAll('[data-t]').forEach(function (el) {
+      var v = t(el.getAttribute('data-t'));
+      if (!v) return;
+      if (el.hasAttribute('data-html')) el.innerHTML = v; else el.textContent = v;
+    });
+    document.querySelectorAll('[data-tp]').forEach(function (el) {
+      var v = t(el.getAttribute('data-tp'));
+      if (v) el.setAttribute('placeholder', v);
+    });
+    var dias = DIAS[codigo];
+    document.querySelectorAll('.dp-weekday').forEach(function (el, i) { el.textContent = dias[i]; });
+  }
+
+  window.CNAIdioma.aplicar = aplicar;
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', aplicar);
+  else aplicar();
+})();
+</script>
 </head>
 <body>
 
@@ -1344,15 +1580,15 @@
 
 <!-- HERO -->
 <div class="hero">
-  <div class="hero-tag">Flight Booking Request</div>
-  <h1>Reserve Your<br><em>Private Flight</em></h1>
-  <p>Check available dates on the calendar, fill in your details, and we'll confirm your booking within one hour.</p>
+  <div class="hero-tag" data-t="heroTag">Flight Booking Request</div>
+  <h1 data-t="heroH1" data-html="1">Reserve Your<br><em>Private Flight</em></h1>
+  <p data-t="heroP">Check available dates on the calendar, fill in your details, and we'll confirm your booking within one hour.</p>
 </div>
 
 <!-- DIVIDER -->
 <div class="divider">
   <div class="divider-line"></div>
-  <div class="divider-text">Step 1: Check availability · Step 2: Submit your request</div>
+  <div class="divider-text" data-t="pasos">Step 1: Check availability · Step 2: Submit your request</div>
   <div class="divider-line"></div>
 </div>
 
@@ -1362,17 +1598,17 @@
   <!-- FORM PANEL -->
   <div class="panel">
     <div class="panel-header">
-      <div class="panel-title">Flight Request</div>
-      <div class="panel-subtitle">Fill in your details and we'll confirm within one hour.</div>
+      <div class="panel-title" data-t="formTitulo">Flight Request</div>
+      <div class="panel-subtitle" data-t="formSub">Fill in your details and we'll confirm within one hour.</div>
     </div>
     <div class="panel-body">
 
       <!-- Success Message -->
       <div class="success-msg" id="successMsg">
         <img src="https://raw.githubusercontent.com/durias-emp/Empoderar-Website/main/comprobado.png" alt="Confirmed" style="width:80px;height:80px;margin:0 auto 20px;display:block;">
-        <h3>Request Received!</h3>
-        <p>Thank you for your booking request. Our team will contact you within one hour to confirm your flight details.</p>
-        <p style="font-size: 13px; margin-top: 16px;">Questions? <a href="https://wa.me/50377458200" style="color:#0f172a;font-weight:600;">WhatsApp us →</a></p>
+        <h3 data-t="exitoTitulo">Request Received!</h3>
+        <p data-t="exitoTexto">Thank you for your booking request. Our team will contact you within one hour to confirm your flight details.</p>
+        <p style="font-size: 13px; margin-top: 16px;" data-t="exitoDudas" data-html="1">Questions? <a href="https://wa.me/50377458200" style="color:#0f172a;font-weight:600;">WhatsApp us →</a></p>
       </div>
 
       <!-- Form -->
@@ -1380,36 +1616,36 @@
 
         <div class="form-row">
           <div class="field">
-            <label>Full Name</label>
-            <input type="text" name="name" placeholder="Your full name" required>
+            <label data-t="lblNombre">Full Name</label>
+            <input type="text" name="name" placeholder="Your full name" data-tp="phNombre" required>
           </div>
           <div class="field">
-            <label>WhatsApp</label>
+            <label data-t="lblWhats">WhatsApp</label>
             <input type="tel" id="phoneInput" name="phone" placeholder="XXXX XXXX" required>
           </div>
         </div>
 
         <div class="field">
-          <label>Email Address</label>
+          <label data-t="lblCorreo">Email Address</label>
           <input type="email" name="email" placeholder="your@email.com" required>
         </div>
 
         <div class="field">
-          <label>Type of Flight</label>
+          <label data-t="lblTipo">Type of Flight</label>
           <div class="service-pills" id="serviceType">
-            <label class="pill"><input type="radio" name="service" value="Tourist"> Tourist</label>
-            <label class="pill"><input type="radio" name="service" value="Executive"> Executive</label>
+            <label class="pill"><input type="radio" name="service" value="Tourist"> <span data-t="pillTurista">Tourist</span></label>
+            <label class="pill"><input type="radio" name="service" value="Executive"> <span data-t="pillEjecutivo">Executive</span></label>
           </div>
         </div>
 
         <!-- Tour cards: shown when Tourist is selected -->
         <div class="tour-dropdown" id="tourDropdown">
-          <div class="tour-dropdown-label">Select your tour</div>
+          <div class="tour-dropdown-label" data-t="lblRecorrido">Select your tour</div>
           <div class="tour-acc">
             <div class="tour-item">
               <button type="button" class="tour-card tour-row" data-tour="San Salvador City" onclick="selectTour(this)">
                 <span class="tr-name">San Salvador</span>
-                <span class="tr-dur">20 min</span>
+                <span class="tr-dur" data-t="dur20">20 min</span>
                 <span class="tr-chev"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
               </button>
               <div class="tour-panel" data-for="San Salvador City">
@@ -1420,7 +1656,7 @@
             <div class="tour-item">
               <button type="button" class="tour-card tour-row" data-tour="Surf City" onclick="selectTour(this)">
                 <span class="tr-name">Surf City</span>
-                <span class="tr-dur">30 min</span>
+                <span class="tr-dur" data-t="dur30">30 min</span>
                 <span class="tr-chev"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
               </button>
               <div class="tour-panel" data-for="Surf City">
@@ -1430,8 +1666,8 @@
             </div>
             <div class="tour-item">
               <button type="button" class="tour-card tour-row" data-tour="Lake and Volcanoes" onclick="selectTour(this)">
-                <span class="tr-name">Lake and Volcanoes</span>
-                <span class="tr-dur">1 hour</span>
+                <span class="tr-name" data-t="tourLago">Lake and Volcanoes</span>
+                <span class="tr-dur" data-t="dur60">1 hour</span>
                 <span class="tr-chev"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
               </button>
               <div class="tour-panel" data-for="Lake and Volcanoes">
@@ -1450,17 +1686,17 @@
 
             <!-- Trip type -->
             <div class="field" style="gap:4px;">
-              <label style="font-size:11px; color:#94a3b8; letter-spacing:0.06em; text-transform:uppercase;">Trip type</label>
+              <label style="font-size:11px; color:#94a3b8; letter-spacing:0.06em; text-transform:uppercase;" data-t="lblViaje">Trip type</label>
               <div class="trip-type-row">
-                <button type="button" class="trip-btn active" data-trip="One Way" onclick="selectTrip(this)">✈ One Way</button>
-                <button type="button" class="trip-btn" data-trip="Round Trip" onclick="selectTrip(this)">⇄ Round Trip</button>
+                <button type="button" class="trip-btn active" data-trip="One Way" onclick="selectTrip(this)" data-t="btnIda">✈ One Way</button>
+                <button type="button" class="trip-btn" data-trip="Round Trip" onclick="selectTrip(this)" data-t="btnIdaVuelta">⇄ Round Trip</button>
               </div>
               <input type="hidden" name="tripType" id="tripType" value="One Way">
             </div>
 
             <!-- From / To -->
             <div class="field">
-              <label>From</label>
+              <label data-t="lblDesde">From</label>
               <div class="airport-pill-wrap" id="originWrap" onclick="focusOriginInput()">
                 <div class="airport-tag" id="originTag">
                   <span class="tag-code">SALA</span>
@@ -1469,15 +1705,15 @@
                 </div>
                 <input type="text" id="originInput" name="execOrigin"
                   value="Salamanca Heliport (SALA)"
-                  placeholder="Type airport or heliport…"
+                  placeholder="Type airport or heliport…" data-tp="phOrigen"
                   style="display:none;">
               </div>
             </div>
             <div class="field">
-              <label>Destination</label>
+              <label data-t="lblDestino">Destination</label>
               <div class="location-wrap">
                 <input type="text" name="execDest" id="execDest"
-                  placeholder="Search city, address or landmark…"
+                  placeholder="Search city, address or landmark…" data-tp="phDestino"
                   autocomplete="off">
               </div>
             </div>
@@ -1487,19 +1723,19 @@
 
         <div class="form-row">
           <div class="field">
-            <label>Date</label>
+            <label data-t="lblFecha">Date</label>
             <div class="datepicker-wrap">
               <button type="button" class="datepicker-btn" id="datepickerBtn" onclick="toggleCalendar()">
-                <span id="datepickerDisplay" class="dp-placeholder">Select a date</span>
+                <span id="datepickerDisplay" class="dp-placeholder" data-t="elijaFecha">Select a date</span>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
               </button>
               <input type="hidden" name="date" id="dateValue" required>
             </div>
           </div>
           <div class="field">
-            <label>Time</label>
+            <label data-t="lblHora">Time</label>
             <div class="time-slot-wrap">
-              <div class="time-slots-locked" id="timeSlotsLocked">Select a date first</div>
+              <div class="time-slots-locked" id="timeSlotsLocked" data-t="horaBloqueada">Select a date first</div>
               <div class="time-slots-grid" id="timeSlotsGrid" style="display:none;"></div>
               <input type="hidden" name="time" id="timeValue">
             </div>
@@ -1508,9 +1744,9 @@
 
         <div class="form-row">
           <div class="field">
-            <label>Number of Passengers</label>
+            <label data-t="lblPasajeros">Number of Passengers</label>
             <select name="passengers" required>
-              <option value="">Select</option>
+              <option value="" data-t="opElija">Select</option>
               <option>1</option>
               <option>2</option>
               <option>3</option>
@@ -1520,18 +1756,18 @@
           <div class="field">
             <label id="refLabel">Content creator code</label>
             <input type="text" name="referral_code" id="refInput" maxlength="20"
-                   autocomplete="off" spellcheck="false" placeholder="Optional">
+                   autocomplete="off" spellcheck="false" placeholder="Optional" data-tp="phOpcional">
             <p id="refMsg" style="display:none;font-size:12px;line-height:1.4;margin:2px 0 0 0;"></p>
           </div>
         </div>
 
 
         <button type="submit" class="submit-btn" id="submitBtn">
-          Send Flight Request →
+          <span data-t="btnEnviar">Send Flight Request →</span>
         </button>
 
         <p class="form-disclaimer">
-          By submitting you agree to be contacted by our team via WhatsApp or email. No payment required at this stage.
+          <span data-t="aviso">By submitting you agree to be contacted by our team via WhatsApp or email. No payment required at this stage.</span>
         </p>
 
       </form>
@@ -1541,39 +1777,39 @@
   <!-- AVAILABILITY PANEL -->
   <div class="panel calendar-panel">
     <div class="panel-header">
-      <div class="panel-title" id="rightPanelTitle">Flight Availability</div>
-      <div class="panel-subtitle" id="rightPanelSubtitle">Select a date to see open time slots</div>
+      <div class="panel-title" id="rightPanelTitle" data-t="dispTitulo">Flight Availability</div>
+      <div class="panel-subtitle" id="rightPanelSubtitle" data-t="dispSub">Select a date to see open time slots</div>
     </div>
     <div class="avail-body" id="availBody">
 
       <!-- Recap (shown after submission) -->
       <div id="recapContent" style="display:none; padding: 8px 0;">
-        <p style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:#94a3b8;font-weight:600;margin-bottom:16px;">Booking Summary</p>
+        <p style="font-size:11px;letter-spacing:0.15em;text-transform:uppercase;color:#94a3b8;font-weight:600;margin-bottom:16px;" data-t="resumenTitulo">Booking Summary</p>
         <table width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;">
           <tbody id="recapRows"></tbody>
         </table>
-        <p style="font-size:12px;color:#64748b;margin-top:20px;line-height:1.6;text-align:center;">We'll reach out via WhatsApp or email within one hour.</p>
+        <p style="font-size:12px;color:#64748b;margin-top:20px;line-height:1.6;text-align:center;" data-t="resumenPie">We'll reach out via WhatsApp or email within one hour.</p>
       </div>
       <div class="avail-empty" id="availEmpty">
         <div id="suggFallback">
           <div class="avail-icon">📅</div>
-          <p>Pick a date on the left and we'll show you what's available that day.</p>
+          <p data-t="vacioTexto">Pick a date on the left and we'll show you what's available that day.</p>
         </div>
         <div id="suggWrap" style="display:none;">
-          <p class="sugg-title" id="suggTitle">Soonest openings</p>
+          <p class="sugg-title" id="suggTitle" data-t="sugProximas">Soonest openings</p>
           <div class="sugg-list" id="suggList"></div>
-          <p class="sugg-foot">Tap one to start, or pick any other date on the left.</p>
+          <p class="sugg-foot" data-t="sugPie">Tap one to start, or pick any other date on the left.</p>
         </div>
       </div>
       <div id="availContent" style="display:none;">
         <div class="avail-date-label" id="availDateLabel"></div>
         <div id="availLoading" class="avail-loading" style="display:none;">
-          <div class="avail-spinner"></div> Checking availability…
+          <div class="avail-spinner"></div> <span data-t="consultando">Checking availability…</span>
         </div>
         <div class="avail-grid" id="availGrid"></div>
         <div class="avail-legend" id="availLegend" style="display:none;">
-          <span><i style="background:rgba(56,189,248,0.35); border:1px solid rgba(56,189,248,0.6);"></i> Available</span>
-          <span><i style="background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.28);"></i> Booked</span>
+          <span data-t="leyendaLibre" data-html="1"><i style="background:rgba(56,189,248,0.35); border:1px solid rgba(56,189,248,0.6);"></i> Available</span>
+          <span data-t="leyendaOcupada" data-html="1"><i style="background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.28);"></i> Booked</span>
         </div>
       </div>
     </div>
@@ -1584,11 +1820,11 @@
 <!-- FOOTER -->
 <section class="aurora-band" id="auroraBand">
   <div class="aurora-inner">
-    <p class="aurora-claim" id="auroraClaim">El Salvador from above</p>
-    <p class="aurora-sub" id="auroraSub">Private helicopter flights · Certified operator COA 007-TNA</p>
+    <p class="aurora-claim" id="auroraClaim" data-t="auroraClaim">El Salvador from above</p>
+    <p class="aurora-sub" id="auroraSub" data-t="auroraSub">Private helicopter flights · Certified operator COA 007-TNA</p>
     <footer>
       <div>© 2026 Cielo Norte Aviación · COA No. 007-TNA · <a href="https://www.cielonorteaviacion.com">cielonorteaviacion.com</a></div>
-      <div>Questions? <a href="https://wa.me/50377458200">WhatsApp us</a> · <a href="mailto:info@cielonorteaviacion.com">info@cielonorteaviacion.com</a></div>
+      <div data-t="pieDudas" data-html="1">Questions? <a href="https://wa.me/50377458200">WhatsApp us</a> · <a href="mailto:info@cielonorteaviacion.com">info@cielonorteaviacion.com</a></div>
     </footer>
   </div>
 </section>
@@ -1666,7 +1902,7 @@
 
 
   // ── Custom date picker ──
-  const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const MONTHS = CNAIdioma.meses;
   const today = new Date(); today.setHours(0,0,0,0);
   let dpCurrent = new Date(today.getFullYear(), today.getMonth(), 1);
   let dpSelected = null;
@@ -1723,7 +1959,7 @@
     const iso = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
     document.getElementById('dateValue').value = iso;
     const display = document.getElementById('datepickerDisplay');
-    display.textContent = dpSelected.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+    display.textContent = CNAIdioma.fecha(dpSelected, 'media');
     display.classList.remove('dp-placeholder');
     document.getElementById('datepickerPanel').classList.remove('show');
     document.getElementById('datepickerBtn').classList.remove('open');
@@ -1775,16 +2011,15 @@
     // Show right panel
     document.getElementById('availEmpty').style.display = 'none';
     document.getElementById('availContent').style.display = 'block';
-    document.getElementById('rightPanelSubtitle').textContent = 'Open time slots for the date you picked';
-    document.getElementById('availDateLabel').textContent =
-      dateObj.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+    document.getElementById('rightPanelSubtitle').textContent = CNAIdioma.t('dispSubElegida');
+    document.getElementById('availDateLabel').textContent = CNAIdioma.fecha(dateObj, 'larga');
     document.getElementById('availLoading').style.display = 'flex';
     document.getElementById('availGrid').innerHTML = '';
     document.getElementById('availLegend').style.display = 'none';
 
     // Reset form time slots to loading state
     document.getElementById('timeSlotsLocked').style.display = 'block';
-    document.getElementById('timeSlotsLocked').textContent = 'Loading availability…';
+    document.getElementById('timeSlotsLocked').textContent = CNAIdioma.t('cargando');
     document.getElementById('timeSlotsGrid').style.display = 'none';
     document.getElementById('timeValue').value = '';
 
@@ -1836,7 +2071,7 @@
       const busy = busyHours.includes(slot.value);
       const past = !busy && pastHours.includes(slot.value);
       const cls  = (busy || past) ? 'busy' : 'free';
-      const badge = past ? '' : busy ? 'Booked' : 'Open';
+      const badge = past ? '' : busy ? CNAIdioma.t('badgeOcupado') : CNAIdioma.t('badgeLibre');
       const elegible = cls === 'free';
       return `<div class="avail-slot ${cls}" data-slot="${slot.value}"
         ${elegible ? `role="button" tabindex="0"
@@ -1902,18 +2137,10 @@
     var CACHE_MS        = 10 * 60 * 1000;
 
     /* por que esa hora y no otra: lo que el pasajero gana volando a esa hora */
-    var RAZON = {
-      '08:00': 'Calmest air of the day',
-      '09:00': 'Clear skies, sharpest photos',
-      '10:00': 'Even light over the volcano',
-      '11:00': 'Wide view of the coastline',
-      '12:00': 'Turquoise water at its brightest',
-      '13:00': 'Easy midday departure',
-      '14:00': 'Strong colour over the lake',
-      '15:00': 'Right before golden hour',
-      '16:00': 'Golden hour over the Pacific',
-      '17:00': 'Sunset from the air'
-    };
+    var RAZON = {};
+    ['08','09','10','11','12','13','14','15','16','17'].forEach(function (h) {
+      RAZON[h + ':00'] = CNAIdioma.t('razon' + h);
+    });
     /* orden de preferencia por tarjeta: asi las tres propuestas no se repiten
        y el pasajero compara hora dorada, manana limpia y atardecer */
     var PREFERENCIA = [
@@ -1931,9 +2158,7 @@
       var s = TIME_SLOTS.filter(function (x) { return x.value === v; })[0];
       return s ? s.label : v;
     }
-    function nombre(d) {
-      return d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
-    }
+    function nombre(d) { return CNAIdioma.fecha(d, 'corta'); }
 
     function ocupadasDe(fechaIso) {
       var llave = 'cna_av_' + fechaIso;
@@ -1981,15 +2206,14 @@
         return '<button type="button" class="sugg" onclick="cnaElegirSugerencia(\'' + t.iso + '\',\'' + t.hora + '\')">' +
                  '<span class="sugg-when"><b>' + t.dia + '</b><small>' + RAZON[t.hora] + '</small></span>' +
                  '<span class="sugg-time"><span>' + etiqueta(t.hora) + '</span>' +
-                 (t.confirmada ? '<i>Open</i>' : '') + '</span>' +
+                 (t.confirmada ? '<i>' + CNAIdioma.t('badgeLibre') + '</i>' : '') + '</span>' +
                '</button>';
       }).join('');
 
       var todasConfirmadas = vivas.every(function (t) { return t.confirmada; });
-      document.getElementById('suggTitle').textContent =
-        todasConfirmadas ? 'Soonest openings' : 'Suggested times';
-      document.getElementById('rightPanelSubtitle').textContent =
-        (todasConfirmadas ? 'Soonest openings' : 'Suggested times') + ', or pick your own date';
+      var encabezado = CNAIdioma.t(todasConfirmadas ? 'sugProximas' : 'sugSugeridas');
+      document.getElementById('suggTitle').textContent = encabezado;
+      document.getElementById('rightPanelSubtitle').textContent = encabezado + CNAIdioma.t('sugDeFondo');
       document.getElementById('suggFallback').style.display = 'none';
       document.getElementById('suggWrap').style.display = 'block';
       vacio.classList.add('has-sugg');
@@ -2083,7 +2307,7 @@
     e.preventDefault();
     const btn = document.getElementById('submitBtn');
     btn.disabled = true;
-    btn.textContent = 'Sending...';
+    btn.textContent = CNAIdioma.t('enviando');
 
     const form = e.target;
     const data = new FormData(form);
@@ -2137,24 +2361,26 @@
       document.getElementById('successMsg').classList.add('show');
 
       // Build recap on right panel
+      const L = (clave) => CNAIdioma.t(clave);
+      const sinEspecificar = L('rSinEspecificar');
       const recapItems = [
-        ['Name', payload.name],
-        ['Email', payload.email],
+        [L('rNombre'), payload.name],
+        [L('rCorreo'), payload.email],
         ['WhatsApp', payload.phone],
-        ['Flight Type', serviceType],
+        [L('rTipo'), serviceType],
         ...(serviceType === 'Tourist'
-          ? [['Tour', payload.tour || 'Not selected']]
+          ? [[L('rTour'), payload.tour || L('rSinElegir')]]
           : [
-              ['Trip Type', data.get('tripType') || 'One Way'],
-              ['From', data.get('execOrigin') || 'Not specified'],
-              ['To', data.get('execDest') || 'Not specified'],
+              [L('rViaje'), data.get('tripType') || 'One Way'],
+              [L('rDesde'), data.get('execOrigin') || sinEspecificar],
+              [L('rHacia'), data.get('execDest') || sinEspecificar],
             ]
         ),
-        ['Date', document.getElementById('datepickerDisplay').textContent],
-        ['Time', payload.time],
-        ['Passengers', payload.passengers],
+        [L('rFecha'), document.getElementById('datepickerDisplay').textContent],
+        [L('rHora'), payload.time],
+        [L('rPasajeros'), payload.passengers],
         ...((window.CNARef && window.CNARef.code())
-            ? [[window.CNARef.t('recap'), window.CNARef.code()]] : []),
+            ? [[L('refResumen'), window.CNARef.code()]] : []),
       ];
 
       document.getElementById('recapRows').innerHTML = recapItems.map(([label, value], i) => `
@@ -2166,12 +2392,12 @@
       document.getElementById('availEmpty').style.display = 'none';
       document.getElementById('availContent').style.display = 'none';
       document.getElementById('recapContent').style.display = 'block';
-      document.getElementById('rightPanelTitle').textContent = 'Booking Summary';
-      document.getElementById('rightPanelSubtitle').textContent = "Here's a recap of your request";
+      document.getElementById('rightPanelTitle').textContent = CNAIdioma.t('resumenTitulo');
+      document.getElementById('rightPanelSubtitle').textContent = CNAIdioma.t('resumenSub');
     } catch (err) {
       btn.disabled = false;
-      btn.textContent = 'Send Flight Request →';
-      alert('Something went wrong sending your request. Please WhatsApp us at +503 7745-8200 or try again.');
+      btn.textContent = CNAIdioma.t('btnEnviar');
+      alert(CNAIdioma.t('errorEnvio'));
     }
   }
 </script>
@@ -2264,14 +2490,12 @@
   var ALMACEN  = 'cna_ref';
   var DIAS     = 30;
 
-  var ES = (navigator.language || 'en').toLowerCase().indexOf('es') === 0;
   var T = {
-    label:   ES ? 'Codigo de creador de contenido' : 'Content creator code',
-    ph:      ES ? 'Opcional' : 'Optional',
-    ok:      ES ? 'Codigo aplicado: ' : 'Code applied: ',
-    bad:     ES ? 'Ese codigo no esta disponible. Su reserva continua normalmente.'
-                : 'That code is not available. Your booking continues normally.',
-    recap:   ES ? 'Codigo' : 'Code'
+    label:  CNAIdioma.t('refEtiqueta'),
+    ph:     CNAIdioma.t('phOpcional'),
+    ok:     CNAIdioma.t('refValido'),
+    bad:    CNAIdioma.t('refInvalido'),
+    recap:  CNAIdioma.t('refResumen')
   };
 
   var input = document.getElementById('refInput');
@@ -2489,12 +2713,6 @@
   });
   arrancar();
 
-  /* Textos segun idioma del visitante */
-  if ((navigator.language || 'en').toLowerCase().indexOf('es') === 0) {
-    document.getElementById('auroraClaim').textContent = 'El Salvador desde el aire';
-    document.getElementById('auroraSub').textContent =
-      'Vuelos privados en helicoptero · Operador certificado COA 007-TNA';
-  }
 })();
 </script>
 
@@ -2507,21 +2725,21 @@
   var TOURS = {
     'San Salvador City': {
       desc:   "A quick scenic flight over San Salvador's historic downtown and key areas for a unique view from above.",
-      descEs: 'Vuelo panoramico sobre el centro historico de San Salvador y los puntos clave de la ciudad.',
+      descEs: 'Vuelo panorámico sobre el centro histórico de San Salvador y los puntos clave de la ciudad.',
       fotos: ['cna-ss-centro-atardecer.jpg','cna-ss-plaza-catedral.jpg','cna-card-san-salvador.jpg','cna-original-helipuerto-frente.jpg']
     },
     'Surf City': {
       desc:   "A scenic tour flight along Surf City's coastline and iconic beaches for a unique view from above.",
-      descEs: 'Vuelo escenico sobre la costa de Surf City y sus playas mas conocidas.',
+      descEs: 'Vuelo escénico sobre la costa de Surf City y sus playas más conocidas.',
       fotos: ['cna-card-surf-city.jpg','cna-picnic-playa.jpg','cna-vuelo-costa.jpg','cna-original-palmeras.jpg']
     },
     'Lake and Volcanoes': {
       desc:   'Spectacular tour over volcanic landscapes and Lake Coatepeque in one unforgettable journey.',
-      descEs: 'Recorrido sobre el complejo volcanico y el lago de Coatepeque en un solo vuelo.',
+      descEs: 'Recorrido sobre el complejo volcánico y el lago de Coatepeque en un solo vuelo.',
       fotos: ['cna-card-volcanes.jpg','cna-volcan-aereo.jpg','cna-original-resort.jpg','cna-vuelo-palmeras.jpg']
     }
   };
-  var ES = (navigator.language || 'en').toLowerCase().indexOf('es') === 0;
+  var ES = CNAIdioma.es;
   var CICLO = 3000;
   var QUIETO = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var reloj = null;
