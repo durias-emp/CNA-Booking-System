@@ -1891,13 +1891,14 @@
   }
 
   /* ── Proximas horas recomendadas ───────────────────────────────────
-     El panel derecho ya no arranca vacio: busca en el calendario los
-     primeros dias con cupo y propone una hora por dia, la mejor para
-     volar. Un toque deja fecha y hora puestas en el formulario.        */
+     El panel derecho ya no arranca vacio: propone tres dias con su mejor
+     hora de vuelo y un toque deja fecha y hora puestas en el formulario.
+     Las tarjetas se pintan de inmediato como sugerencia y el calendario
+     las confirma despues, porque la consulta a Google tarda bastante.
+     Solo la tarjeta ya confirmada muestra el distintivo de cupo abierto. */
   (function () {
     var MAX_SUGERENCIAS = 3;      // cuantas tarjetas mostramos
     var VENTANA_DIAS    = 12;     // hasta donde miramos hacia adelante
-    var LOTE            = 3;      // dias que consultamos a la vez
     var CACHE_MS        = 10 * 60 * 1000;
 
     /* por que esa hora y no otra: lo que el pasajero gana volando a esa hora */
@@ -1921,10 +1922,17 @@
       ['17:00','16:00','09:00','08:00','15:00','10:00','11:00','14:00','13:00','12:00']
     ];
 
+    var tarjetas  = [];
+    var dias      = [];
+    var apuntador = 0;
+
     function iso(d) { return d.toLocaleDateString('sv-SE'); }
     function etiqueta(v) {
       var s = TIME_SLOTS.filter(function (x) { return x.value === v; })[0];
       return s ? s.label : v;
+    }
+    function nombre(d) {
+      return d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
     }
 
     function ocupadasDe(fechaIso) {
@@ -1959,58 +1967,67 @@
       return null;
     }
 
-    function pintar(lista) {
-      var caja = document.getElementById('suggList');
-      caja.innerHTML = lista.map(function (s) {
-        return '<button type="button" class="sugg" onclick="cnaElegirSugerencia(\'' + s.iso + '\',\'' + s.hora + '\')">' +
-                 '<span class="sugg-when"><b>' + s.dia + '</b><small>' + RAZON[s.hora] + '</small></span>' +
-                 '<span class="sugg-time"><span>' + etiqueta(s.hora) + '</span><i>Open</i></span>' +
+    function pintar() {
+      var vacio = document.getElementById('availEmpty');
+      /* si ya eligio una fecha, el panel es suyo y no se lo movemos */
+      if (!vacio || vacio.style.display === 'none') return;
+
+      /* copia solo para pintar: ordenada por fecha, sin tocar el orden real */
+      var vivas = tarjetas.filter(function (t) { return !t.oculta; })
+                          .sort(function (a, b) { return a.iso < b.iso ? -1 : 1; });
+      if (!vivas.length) return;
+
+      document.getElementById('suggList').innerHTML = vivas.map(function (t) {
+        return '<button type="button" class="sugg" onclick="cnaElegirSugerencia(\'' + t.iso + '\',\'' + t.hora + '\')">' +
+                 '<span class="sugg-when"><b>' + t.dia + '</b><small>' + RAZON[t.hora] + '</small></span>' +
+                 '<span class="sugg-time"><span>' + etiqueta(t.hora) + '</span>' +
+                 (t.confirmada ? '<i>Open</i>' : '') + '</span>' +
                '</button>';
       }).join('');
+
+      var todasConfirmadas = vivas.every(function (t) { return t.confirmada; });
+      document.getElementById('suggTitle').textContent =
+        todasConfirmadas ? 'Soonest openings' : 'Suggested times';
+      document.getElementById('rightPanelSubtitle').textContent =
+        (todasConfirmadas ? 'Soonest openings' : 'Suggested times') + ', or pick your own date';
       document.getElementById('suggFallback').style.display = 'none';
       document.getElementById('suggWrap').style.display = 'block';
-      document.getElementById('availEmpty').classList.add('has-sugg');
-      document.getElementById('rightPanelSubtitle').textContent = 'Soonest openings, or pick your own date';
+      vacio.classList.add('has-sugg');
     }
 
-    function buscar() {
-      if (!APPS_SCRIPT_URL) return;
+    function nuevaTarjeta(turno) {
+      if (apuntador >= dias.length) return null;
+      var d = dias[apuntador++];
+      return { iso: iso(d), dia: nombre(d), hora: PREFERENCIA[turno % PREFERENCIA.length][0], confirmada: false };
+    }
+
+    /* el calendario llega tarde: cuando contesta, confirma la hora o la cambia */
+    function verificar(i) {
+      var t = tarjetas[i];
+      if (!t || t.oculta) return;
+      ocupadasDe(t.iso).then(function (ocupadas) {
+        var hora = mejorHoraLibre(ocupadas, i);
+        if (hora) { t.hora = hora; t.confirmada = true; pintar(); return; }
+        var otra = nuevaTarjeta(i);        /* ese dia esta lleno: seguimos al siguiente */
+        if (otra) { tarjetas[i] = otra; pintar(); verificar(i); }
+        else { t.oculta = true; pintar(); }
+      }, function () { /* sin respuesta: la tarjeta se queda como sugerencia, sin prometer cupo */ });
+    }
+
+    function arrancar() {
       var hoy = new Date(); hoy.setHours(0, 0, 0, 0);
-      var encontradas = [];
-      var dia = 1;                       /* empezamos manana: volamos con reserva anticipada */
-
-      function siguienteLote() {
-        if (encontradas.length >= MAX_SUGERENCIAS || dia > VENTANA_DIAS) return Promise.resolve();
-        var fechas = [];
-        for (var i = 0; i < LOTE && dia <= VENTANA_DIAS; i++, dia++) {
-          var d = new Date(hoy.getTime()); d.setDate(d.getDate() + dia);
-          fechas.push(d);
-        }
-        return Promise.all(fechas.map(function (d) {
-          return ocupadasDe(iso(d)).then(
-            function (h) { return { d: d, h: h }; },
-            function ()  { return null; }
-          );
-        })).then(function (res) {
-          res.forEach(function (r) {
-            if (!r || encontradas.length >= MAX_SUGERENCIAS) return;
-            var hora = mejorHoraLibre(r.h, encontradas.length);
-            if (!hora) return;
-            encontradas.push({
-              iso:  iso(r.d),
-              hora: hora,
-              dia:  r.d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })
-            });
-          });
-          return siguienteLote();
-        });
+      dias = [];
+      for (var i = 1; i <= VENTANA_DIAS; i++) {      /* desde manana: volamos con reserva anticipada */
+        var d = new Date(hoy.getTime()); d.setDate(d.getDate() + i);
+        dias.push(d);
       }
-
-      siguienteLote().then(function () {
-        /* si ya eligio una fecha mientras buscabamos, no le movemos el panel */
-        var vacio = document.getElementById('availEmpty');
-        if (encontradas.length && vacio && vacio.style.display !== 'none') pintar(encontradas);
-      }).catch(function () {});
+      for (var j = 0; j < MAX_SUGERENCIAS; j++) {
+        var t = nuevaTarjeta(j);
+        if (t) tarjetas.push(t);
+      }
+      pintar();                                       /* se ve de una vez, sin esperar a Google */
+      if (!APPS_SCRIPT_URL) return;
+      tarjetas.forEach(function (_, i) { verificar(i); });
     }
 
     window.cnaElegirSugerencia = function (fechaIso, hora) {
@@ -2021,10 +2038,7 @@
       dpSelect(y, m, d);
     };
 
-    window.addEventListener('load', function () {
-      if ('requestIdleCallback' in window) requestIdleCallback(buscar, { timeout: 2500 });
-      else setTimeout(buscar, 1200);
-    });
+    window.addEventListener('load', function () { setTimeout(arrancar, 150); });
   })();
 
   function toggleCalendar() {
