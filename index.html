@@ -674,22 +674,12 @@
   }
   .aurora-inner {
     position: relative; z-index: 2;
-    min-height: 300px;
+    min-height: 180px;
     display: flex; flex-direction: column; justify-content: flex-end;
-    padding: 120px 48px 0 48px;
-  }
-  .aurora-claim {
-    text-align: center; color: #ffffff;
-    font-size: 26px; font-weight: 600; letter-spacing: -0.4px;
-    margin: 0 0 8px 0;
-  }
-  .aurora-sub {
-    text-align: center; color: rgba(255,255,255,0.72);
-    font-size: 14px; margin: 0 0 40px 0;
+    padding: 72px 48px 0 48px;
   }
   @media (max-width: 768px) {
-    .aurora-inner { padding: 150px 24px 0 24px; min-height: 340px; }
-    .aurora-claim { font-size: 21px; }
+    .aurora-inner { padding: 90px 24px 0 24px; min-height: 200px; }
   }
 
   /* ── DATE PICKER ── */
@@ -1566,9 +1556,6 @@
                     'That code is not available. Your booking continues normally.'],
     refResumen:    ['C\u00f3digo', 'Code'],
 
-    auroraClaim:   ['El Salvador desde el aire', 'El Salvador from above'],
-    auroraSub:     ['Vuelos privados en helic\u00f3ptero \u00b7 Operador certificado COA 007-TNA',
-                    'Private helicopter flights \u00b7 Certified operator COA 007-TNA'],
     pieRedes:      ['Nuestras redes', 'Our socials'],
     pieContacto:   ['Contacto', 'Contact'],
     pieCorreoEt:   ['Correo electr\u00f3nico', 'Email'],
@@ -1920,8 +1907,6 @@
 <!-- FOOTER -->
 <section class="aurora-band" id="auroraBand">
   <div class="aurora-inner">
-    <p class="aurora-claim" id="auroraClaim" data-t="auroraClaim">El Salvador from above</p>
-    <p class="aurora-sub" id="auroraSub" data-t="auroraSub">Private helicopter flights · Certified operator COA 007-TNA</p>
     <footer>
       <div class="pie-cols">
 
