@@ -174,8 +174,8 @@
     color: #0f172a;
   }
   .panel-header {
-    padding: 24px 28px 20px;
-    border-bottom: 1px solid #f1f5f9;
+    padding: 20px 24px 12px;
+    border-bottom: 0;
   }
   .panel-title {
     font-family: 'Archivo', sans-serif;
@@ -187,7 +187,7 @@
     font-size: 13px; color: #64748b;
     margin-top: 3px; font-weight: 400;
   }
-  .panel-body { padding: 28px; }
+  .panel-body { padding: 8px 24px 24px; }
 
   /* ── FORM ── */
   .form-grid { display: grid; gap: 14px; }
@@ -732,7 +732,7 @@
   .dp-day.dp-disabled { color: #e2e8f0; cursor: default; pointer-events: none; }
 
   /* ── AVAILABILITY PANEL ── */
-  .avail-body { padding: 24px 28px 28px; }
+  .avail-body { padding: 6px 24px 22px; }
 
   .avail-empty {
     display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -921,7 +921,7 @@
       0 0 0 0.5px rgba(255,255,255,0.06) inset !important;
     color: var(--ink);
   }
-  .panel-header { border-bottom: 1px solid var(--glass-line); }
+  .panel-header { border-bottom: 0 !important; }
   .panel-title { color: var(--ink); }
   .panel-subtitle, .tour-dropdown-label { color: var(--ink-soft); }
   .field label { color: var(--ink-soft); font-weight: 400; }
@@ -1164,10 +1164,11 @@
   }
 
   /* ── proximas horas recomendadas en el panel vacio ────────── */
-  .avail-empty.has-sugg { padding: 14px 0 2px; display: block; text-align: left; }
-  .sugg-title {
-    font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
-    font-weight: 600; color: var(--ink-mute); margin: 0 0 9px;
+  .avail-empty.has-sugg { padding: 8px 0 0; display: block; text-align: left; }
+  .avail-empty .sugg-title {
+    font-size: 10px; letter-spacing: 1.2px; text-transform: uppercase;
+    font-weight: 600; color: var(--ink-mute); margin: 0 0 8px;
+    max-width: none; white-space: nowrap;
   }
   .sugg-list { display: grid; gap: 7px; }
   .sugg {
@@ -1478,7 +1479,7 @@
     resumenPie:    ['Le escribimos por WhatsApp o correo en una hora.', "We'll reach out via WhatsApp or email within one hour."],
     vacioTexto:    ['Elija una fecha a la izquierda y le mostramos las horas libres de ese d\u00eda.',
                     "Pick a date on the left and we'll show you what's available that day."],
-    sugProximas:   ['Horas libres m\u00e1s pr\u00f3ximas', 'Soonest openings'],
+    sugProximas:   ['Pr\u00f3ximas horas libres', 'Soonest openings'],
     sugSugeridas:  ['Horarios sugeridos', 'Suggested times'],
     sugPie:        ['Toque una para empezar, o elija otra fecha a la izquierda.', 'Tap one to start, or pick any other date on the left.'],
     sugDeFondo:    [', o elija su propia fecha', ', or pick your own date'],
