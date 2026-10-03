@@ -1319,7 +1319,7 @@
     touch-action: pan-y;
   }
   .blind {
-    position: relative; flex: 1 1 0; min-width: 46px;
+    position: relative; flex: 1 1 0; min-width: 34px;
     border-radius: 18px; overflow: hidden; cursor: pointer;
     background: rgba(255,255,255,0.05);
     border: 1px solid var(--glass-line);
@@ -1336,7 +1336,7 @@
     transition: filter 1s cubic-bezier(.22,1,.36,1),
                 transform 1.6s cubic-bezier(.22,1,.36,1);
   }
-  .blind.active { flex-grow: 7; }
+  .blind.active { flex-grow: 9; }
   .blind.active img { filter: none; transform: scale(1); }
   .blind::after {
     content: ''; position: absolute; inset: 0;
@@ -1351,9 +1351,10 @@
   }
   .blinds-dot.on { background: #7dd3fc; width: 16px; border-radius: 3px; }
   @media (max-width: 768px) {
-    .blinds { height: 230px; gap: 8px; }
-    .blind { border-radius: 16px; }
-    .blind.active { flex-grow: 8; }
+    .blinds { height: 230px; gap: 7px; }
+    /* en el telefono las cerradas se hacen mucho mas angostas: la abierta manda */
+    .blind { border-radius: 16px; min-width: 18px; }
+    .blind.active { flex-grow: 13; }
   }
   @media (prefers-reduced-motion: reduce) {
     .blind, .blind img { transition: none; }
@@ -1398,15 +1399,32 @@
     padding: 0 10px;
   }
   .tour-panel.open {
-    max-height: 420px; opacity: 1; padding: 10px;
+    max-height: 620px; opacity: 1; padding: 10px;
     background: rgba(255,255,255,0.04);
     border-color: var(--glass-line);
   }
   .tour-panel-desc {
-    font-size: 12.5px; line-height: 1.55; color: var(--ink-soft);
-    padding: 10px 4px 2px;
+    font-size: 12.5px; line-height: 1.6; color: var(--ink-soft);
+    padding: 10px 4px 0;
   }
-  @media (max-width: 768px) { .tour-panel.open { max-height: 460px; } }
+  /* el gesto de quedarse con la experiencia, antes de bajar a la fecha */
+  .tour-cta {
+    margin: 12px 4px 4px; width: calc(100% - 8px);
+    padding: 11px 16px; border: 0; border-radius: 12px;
+    background: #ffffff; color: #0b1220;
+    font-family: inherit; font-size: 13px; font-weight: 600; letter-spacing: .1px;
+    cursor: pointer;
+    transition: background .15s ease, transform .15s ease;
+  }
+  .tour-cta:hover { background: #e8f4ff; transform: translateY(-1px); }
+  .tour-cta:active { transform: none; }
+  .latiendo { animation: latido 1.3s ease; }
+  @keyframes latido {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(56,189,248,0); }
+    30%      { box-shadow: 0 0 0 5px rgba(56,189,248,0.38); }
+    65%      { box-shadow: 0 0 0 10px rgba(56,189,248,0); }
+  }
+  @media (max-width: 768px) { .tour-panel.open { max-height: 620px; } }
 
   /* TOURS: cada opcion es UNA sola pieza, sin costuras internas */
   .tour-item {
@@ -1452,6 +1470,7 @@
    modulos piden sus frases con CNAIdioma.t(clave).                      */
 (function () {
   var D = {
+    ctaElegir:     ['Elegir esta experiencia \u2192', 'Choose this experience \u2192'],
     anuncio1:      ['Reserve ahora y aproveche las tarifas especiales de fin de a\u00f1o',
                     'Book now and get our special end of year rates'],
     titulo:        ['Reserve su vuelo \u00b7 Cielo Norte Aviaci\u00f3n', 'Book a Flight \u00b7 Cielo Norte Aviaci\u00f3n'],
@@ -1478,10 +1497,10 @@
     pillTurista:   ['Tur\u00edstico', 'Tourist'],
     pillEjecutivo: ['Ejecutivo', 'Executive'],
     lblRecorrido:  ['Elija su recorrido', 'Select your tour'],
-    tourLago:      ['Lago y volcanes', 'Lake and Volcanoes'],
+    tourLago:      ['Tour Gran El Salvador', 'Tour Gran El Salvador'],
     dur20:         ['20 min', '20 min'],
     dur30:         ['30 min', '30 min'],
-    dur60:         ['1 hora', '1 hour'],
+    dur60:         ['60 min', '60 min'],
 
     lblViaje:      ['Tipo de viaje', 'Trip type'],
     btnIda:        ['\u2708 Solo ida', '\u2708 One Way'],
@@ -1738,6 +1757,7 @@
               <div class="tour-panel" data-for="San Salvador City">
                 <div class="tour-panel-media"></div>
                 <div class="tour-panel-desc"></div>
+                <button type="button" class="tour-cta" data-t="ctaElegir" onclick="elegirExperiencia(event)">Choose this experience</button>
               </div>
             </div>
             <div class="tour-item">
@@ -1749,17 +1769,19 @@
               <div class="tour-panel" data-for="Surf City">
                 <div class="tour-panel-media"></div>
                 <div class="tour-panel-desc"></div>
+                <button type="button" class="tour-cta" data-t="ctaElegir" onclick="elegirExperiencia(event)">Choose this experience</button>
               </div>
             </div>
             <div class="tour-item">
-              <button type="button" class="tour-card tour-row" data-tour="Lake and Volcanoes" onclick="selectTour(this)">
-                <span class="tr-name" data-t="tourLago">Lake and Volcanoes</span>
-                <span class="tr-dur" data-t="dur60">1 hour</span>
+              <button type="button" class="tour-card tour-row" data-tour="Tour Gran El Salvador" onclick="selectTour(this)">
+                <span class="tr-name" data-t="tourLago">Tour Gran El Salvador</span>
+                <span class="tr-dur" data-t="dur60">60 min</span>
                 <span class="tr-chev"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
               </button>
-              <div class="tour-panel" data-for="Lake and Volcanoes">
+              <div class="tour-panel" data-for="Tour Gran El Salvador">
                 <div class="tour-panel-media"></div>
                 <div class="tour-panel-desc"></div>
+                <button type="button" class="tour-cta" data-t="ctaElegir" onclick="elegirExperiencia(event)">Choose this experience</button>
               </div>
             </div>
           </div>
@@ -2234,6 +2256,18 @@
   }
 
   /* elegir la hora desde el panel de disponibilidad: usa la misma pastilla del formulario */
+  /* el boton del tour: ya quedo elegido al abrirlo, aqui lo llevamos a la fecha */
+  function elegirExperiencia(ev) {
+    if (ev) ev.stopPropagation();
+    var boton = document.getElementById('datepickerBtn');
+    if (!boton) return;
+    boton.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    boton.classList.remove('latiendo');
+    void boton.offsetWidth;
+    boton.classList.add('latiendo');
+    setTimeout(function () { boton.classList.remove('latiendo'); }, 1500);
+  }
+
   function pickFromAvail(value) {
     const pill = document.querySelector(`.ts-pill[data-slot="${value}"]:not(.ts-busy)`);
     if (pill) { pill.click(); pill.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }
@@ -2840,19 +2874,19 @@
   var B = 'https://raw.githubusercontent.com/durias-emp/CNA-Booking-System/main/';
   var TOURS = {
     'San Salvador City': {
-      desc:   "A quick scenic flight over San Salvador's historic downtown and key areas for a unique view from above.",
-      descEs: 'Vuelo panorámico sobre el centro histórico de San Salvador y los puntos clave de la ciudad.',
+      desc:   'Twenty minutes over the capital. The historic downtown, the cathedral and the plazas, the parks and the avenues you cross every day, seen from a window with nothing in the way.',
+      descEs: 'Veinte minutos sobre la capital. El centro histórico, la catedral y las plazas, los parques y las avenidas que cruza todos los días, vistos desde la ventana y sin nada en medio.',
       fotos: ['cna-ss-centro-atardecer.jpg','cna-ss-plaza-catedral.jpg','cna-card-san-salvador.jpg','cna-original-helipuerto-frente.jpg']
     },
     'Surf City': {
-      desc:   "A scenic tour flight along Surf City's coastline and iconic beaches for a unique view from above.",
-      descEs: 'Vuelo escénico sobre la costa de Surf City y sus playas más conocidas.',
-      fotos: ['cna-card-surf-city.jpg','cna-picnic-playa.jpg','cna-vuelo-costa.jpg','cna-original-palmeras.jpg']
+      desc:   'Half an hour down the Pacific coast. The beaches of Surf City and the waves lining up below, the cliffs, the estuaries and the coastline that made this country a surfing destination.',
+      descEs: 'Media hora sobre la costa del Pacífico. Las playas de Surf City y las olas formándose abajo, los acantilados, los esteros y el litoral que puso a este país en el mapa del surf.',
+      fotos: ['cna-card-surf-city.jpg','cna-original-resort.jpg','cna-picnic-playa.jpg','cna-vuelo-costa.jpg']
     },
-    'Lake and Volcanoes': {
-      desc:   'Spectacular tour over volcanic landscapes and Lake Coatepeque in one unforgettable journey.',
-      descEs: 'Recorrido sobre el complejo volcánico y el lago de Coatepeque en un solo vuelo.',
-      fotos: ['cna-card-volcanes.jpg','cna-volcan-aereo.jpg','cna-original-resort.jpg','cna-vuelo-palmeras.jpg']
+    'Tour Gran El Salvador': {
+      desc:   'A full hour across the country. The Santa Ana volcano and its turquoise crater, Lake Coatepeque and its island, the coffee highlands and the valleys in between. The whole country in one flight.',
+      descEs: 'Una hora entera sobre el país. El volcán de Santa Ana y su cráter turquesa, el lago de Coatepeque y su isla, las fincas de café y los valles del camino. Todo el país en un solo vuelo.',
+      fotos: ['cna-santa-ana-crater.jpg','cna-coatepeque-isla.jpg','cna-volcan-aereo.jpg','cna-card-volcanes.jpg']
     }
   };
   var ES = CNAIdioma.es;
