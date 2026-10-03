@@ -55,8 +55,10 @@
   /* ── barra de anuncio: corre sin fin, se detiene al pasar el cursor ── */
   .anuncio {
     position: relative; z-index: 10;
+    margin-top: 14px;              /* un respiro contra el borde de arriba */
     overflow: hidden;
     background: rgba(56,189,248,0.10);
+    border-top: 1px solid rgba(56,189,248,0.22);
     border-bottom: 1px solid rgba(56,189,248,0.22);
   }
   .anuncio-pista {
@@ -1420,7 +1422,6 @@
   var D = {
     anuncio1:      ['Reserve ahora y aproveche las tarifas especiales de fin de a\u00f1o',
                     'Book now and get our special end of year rates'],
-    anuncio2:      ['Vuelos privados sobre El Salvador', 'Private flights over El Salvador'],
     titulo:        ['Reserve su vuelo \u00b7 Cielo Norte Aviaci\u00f3n', 'Book a Flight \u00b7 Cielo Norte Aviaci\u00f3n'],
     heroTag:       ['Solicitud de reserva', 'Flight Booking Request'],
     heroH1:        ['Reserve su<br><em>vuelo privado</em>', 'Reserve Your<br><em>Private Flight</em>'],
@@ -1615,8 +1616,8 @@
 <!-- BARRA DE ANUNCIO -->
 <div class="anuncio" role="status">
   <div class="anuncio-pista">
-    <div class="anuncio-grupo"><span data-t="anuncio1">Book now and get our special end of year rates</span><span data-t="anuncio2">Private flights over El Salvador</span><span data-t="anuncio1">Book now and get our special end of year rates</span><span data-t="anuncio2">Private flights over El Salvador</span></div>
-    <div class="anuncio-grupo" aria-hidden="true"><span data-t="anuncio1">Book now and get our special end of year rates</span><span data-t="anuncio2">Private flights over El Salvador</span><span data-t="anuncio1">Book now and get our special end of year rates</span><span data-t="anuncio2">Private flights over El Salvador</span></div>
+    <div class="anuncio-grupo"><span data-t="anuncio1">Book now and get our special end of year rates</span><span data-t="anuncio1">Book now and get our special end of year rates</span><span data-t="anuncio1">Book now and get our special end of year rates</span><span data-t="anuncio1">Book now and get our special end of year rates</span></div>
+    <div class="anuncio-grupo" aria-hidden="true"><span data-t="anuncio1">Book now and get our special end of year rates</span><span data-t="anuncio1">Book now and get our special end of year rates</span><span data-t="anuncio1">Book now and get our special end of year rates</span><span data-t="anuncio1">Book now and get our special end of year rates</span></div>
   </div>
 </div>
 
