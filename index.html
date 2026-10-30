@@ -1569,7 +1569,7 @@
     pillEjecutivo: ['Ejecutivo', 'Executive'],
     lblRecorrido:  ['Elige tu recorrido', 'Select your tour'],
     tourLago:      ['Gran Tour El Salvador', 'Gran Tour El Salvador'],
-    tourSurfSs:    ['Surf City y San Salvador', 'Surf City and San Salvador'],
+    tourBalsamo:   ['Ruta del B\u00e1lsamo', 'Ruta del B\u00e1lsamo'],
     dur48:         ['48 min', '48 min'],
     dur30:         ['30 min', '30 min'],
     dur60:         ['60 min', '60 min'],
@@ -1833,12 +1833,24 @@
               </div>
             </div>
             <div class="tour-item">
-              <button type="button" class="tour-card tour-row" data-tour="Surf City and San Salvador" onclick="selectTour(this)">
-                <span class="tr-name" data-t="tourSurfSs">Surf City and San Salvador</span>
+              <button type="button" class="tour-card tour-row" data-tour="San Salvador" onclick="selectTour(this)">
+                <span class="tr-name">San Salvador</span>
+                <span class="tr-dur" data-t="dur30">30 min</span>
+                <span class="tr-chev"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              </button>
+              <div class="tour-panel" data-for="San Salvador">
+                <div class="tour-panel-media"></div>
+                <div class="tour-panel-desc"></div>
+                <button type="button" class="tour-cta" onclick="elegirExperiencia(event)"><span class="cta-cara cta-invita" data-t="ctaElegir">Choose this experience</span><span class="cta-cara cta-listo"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12.6l4.4 4.4L19 7.2" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-t="ctaListo">Experience selected</span></span></button>
+              </div>
+            </div>
+            <div class="tour-item">
+              <button type="button" class="tour-card tour-row" data-tour="Ruta del Bálsamo" onclick="selectTour(this)">
+                <span class="tr-name" data-t="tourBalsamo">Ruta del Bálsamo</span>
                 <span class="tr-dur" data-t="dur48">48 min</span>
                 <span class="tr-chev"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
               </button>
-              <div class="tour-panel" data-for="Surf City and San Salvador">
+              <div class="tour-panel" data-for="Ruta del Bálsamo">
                 <div class="tour-panel-media"></div>
                 <div class="tour-panel-desc"></div>
                 <button type="button" class="tour-cta" onclick="elegirExperiencia(event)"><span class="cta-cara cta-invita" data-t="ctaElegir">Choose this experience</span><span class="cta-cara cta-listo"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12.6l4.4 4.4L19 7.2" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-t="ctaListo">Experience selected</span></span></button>
@@ -3060,10 +3072,15 @@
 (function () {
   var B = 'https://raw.githubusercontent.com/durias-emp/CNA-Booking-System/main/';
   var TOURS = {
-    'Surf City and San Salvador': {
-      desc:   '48 minutes over the coast and the capital. The beaches of Surf City and the cliffs of La Libertad, then San Salvador: the historic downtown, the cathedral and the plazas, seen from a window with nothing in the way.',
-      descEs: '48 minutos sobre la costa y la capital. Las playas de Surf City y los acantilados de La Libertad, y después San Salvador: el centro histórico, la catedral y las plazas, vistos desde la ventana y sin nada en medio.',
+    'San Salvador': {
+      desc:   'Thirty minutes over the capital. The historic downtown, the cathedral and the plazas, the parks and the avenues, with the San Salvador volcano above the city.',
+      descEs: 'Treinta minutos sobre la capital. El centro histórico, la catedral y las plazas, los parques y las avenidas, con el volcán de San Salvador sobre la ciudad.',
       fotos: ['cna-ss-centro-atardecer.jpg','cna-ss-plaza-catedral.jpg','cna-card-san-salvador.jpg','cna-original-helipuerto-frente.jpg']
+    },
+    'Ruta del Bálsamo': {
+      desc:   '48 minutes from the coast to the capital, across the Bálsamo range. The beaches of Surf City and the cliffs of La Libertad, then San Salvador: the historic downtown, the cathedral and the plazas.',
+      descEs: '48 minutos de la costa a la capital, cruzando la cordillera del Bálsamo. Las playas de Surf City y los acantilados de La Libertad, y después San Salvador: el centro histórico, la catedral y las plazas.',
+      fotos: ['cna-vuelo-costa.jpg','cna-card-san-salvador.jpg','cna-card-surf-city.jpg','cna-ss-plaza-catedral.jpg']
     },
     'Surf City': {
       desc:   'Half an hour down the Pacific coast. The beaches of Surf City and the waves lining up below, the cliffs, the estuaries and the coastline that made this country a surfing destination.',
